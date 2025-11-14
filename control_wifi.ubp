@@ -1,0 +1,716 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables peticion 
+
+script 251 66 {
+whenStarted
+Setup 0 1
+wifiConnect 'POCO X7 Pro' 'crg12345'
+forever {
+  peticion = ('[net:httpServerGetRequest]')
+  if (peticion != '') {
+    if (('path of request' peticion) == '/f') {
+      '[net:respondToHttpRequest]' '200 OK' 'adelante'
+      move 'adelante' '5'
+      '[display:mbDisplay]' 4347332
+      waitMillis 1000
+      move 'parar' '0'
+    } (('path of request' peticion) == '/b') {
+      '[net:respondToHttpRequest]' '200 OK' 'atrás'
+      move 'atrás' '5'
+      '[display:mbDisplay]' 4674692
+      waitMillis 1000
+      move 'parar' '0'
+    } (('path of request' peticion) == '/r') {
+      '[net:respondToHttpRequest]' '200 OK' 'derecha'
+      move 'derecha' '5'
+      '[display:mbDisplay]' 4488452
+      waitMillis 1000
+      move 'parar' '0'
+    } (('path of request' peticion) == '/l') {
+      '[net:respondToHttpRequest]' '200 OK' 'izquierda'
+      move 'izquierda' '5'
+      '[display:mbDisplay]' 4291652
+      waitMillis 1000
+      move 'parar' '0'
+    } else {
+      '[net:respondToHttpRequest]' '404 Not found'
+    }
+  }
+}
+}
+
+
+module Eserover
+author 'por Pedro Ruiz'
+version 1 0 
+depends Servo 
+choices esero_velocity '0' '1' '2' '3' '4' '5' '6' '7' '8' '9' '10' 
+choices esero_action adelante 'atrás' parar izquierda derecha 
+description ''
+variables _pinRightRover _pinLeftRover 
+
+  spec ' ' 'move' 'mover _ a velocidad _' 'menu.esero_action menu.esero_velocity' 'adelante' '0'
+  spec ' ' 'Setup' 'configurar pines izqd. _ derch. _' 'auto auto' '' ''
+
+to Setup pinL pinR {
+  _pinLeftRover = pinL
+  _pinRightRover = pinR
+}
+
+to move action velocity {
+  if (action == 'adelante') {
+    local 'direction0' -1
+    local 'direction1' 1
+  } (action == 'atrás') {
+    local 'direction0' 1
+    local 'direction1' -1
+  } (action == 'derecha') {
+    local 'direction0' -1
+    local 'direction1' -1
+  } (action == 'izquierda') {
+    local 'direction0' 1
+    local 'direction1' 1
+  } (action == 'parar') {
+    local 'direction0' 0
+    local 'direction1' 0
+  }
+  setServoAngle _pinLeftRover (('[misc:rescale]' velocity 0 10 0 90) * direction0)
+  setServoAngle _pinRightRover (('[misc:rescale]' velocity 0 10 0 90) * direction1)
+}
+
+
+module 'HTTP server' Comm
+author MicroBlocks
+version 1 3 
+depends WiFi 
+tags http network 
+description 'Create an HTTP server in MicroBlocks. You can use this library to allow remote control for your Wifi-enabled board.'
+
+  spec 'r' '[net:httpServerGetRequest]' 'HTTP server request : binary data _ : port _' 'bool num' false 8080
+  spec 'r' 'request method' 'method of request _' 'str' ''
+  spec 'r' 'path of request' 'path of request _' 'str' ''
+  spec 'r' 'headers of request' 'headers of request _' 'str' ''
+  spec 'r' 'body of request' 'body of request _' 'str' ''
+  spec 'r' 'content length of request' 'content length of request _' 'str' ''
+  spec ' ' '[net:respondToHttpRequest]' 'respond _ to HTTP request : with body _ : and headers _ : keepAlive _' 'str str str bool' '200 OK' 'Welcome to the MicroBlocks HTTP server' 'Content-Type: text/plain' false
+  spec 'r' '_endOfHeaders' '_end of headers _' 'str'
+  spec 'r' '_toString' '_toString _' 'auto' 'abc'
+
+to '_endOfHeaders' request {
+  return ('[data:find]' ('[data:unicodeString]' ('[data:makeList]' 13 10 13 10)) request)
+}
+
+to '_toString' aStringOrByteArray {
+  comment 'If argument is a byte array, convert it to a string. '
+  if (not (isType aStringOrByteArray 'string')) {
+    aStringOrByteArray = ('[data:join]' '' aStringOrByteArray)
+  }
+  return aStringOrByteArray
+}
+
+to 'body of request' request {
+  i = ('_endOfHeaders' request)
+  if (i < 0) {
+    return ''
+  }
+  return ('[data:copyFromTo]' request (i + 4))
+}
+
+to 'content length of request' request {
+  local 'i' ('_endOfHeaders' request)
+  if (i < 0) {
+    return 0
+  }
+  local 'j' ('[data:find]' 'Content-Length: ' request)
+  if (j < 0) {
+    comment 'Try alternate capitalization'
+    j = ('[data:find]' 'Content-length: ' request)
+  }
+  if (or (j < 0) (j > i)) {
+    return 0
+  }
+  j += 16
+  local 'k' ('[data:find]' ('[data:unicodeString]' 13) request j)
+  return (('[data:copyFromTo]' request j (k - 1)) + 0)
+}
+
+to 'headers of request' request {
+  i = ('_endOfHeaders' request)
+  if (i < 0) {
+    return ''
+  }
+  return ('_toString' ('[data:copyFromTo]' request 1 (i - 1)))
+}
+
+to 'path of request' request {
+  return ('_toString' ('[data:copyFromTo]' request (('[data:find]' ' ' request) + 1) (('[data:find]' ' HTTP' request) - 1)))
+}
+
+to 'request method' request {
+  return ('_toString' ('[data:copyFromTo]' request 1 (('[data:find]' ' ' request) - 1)))
+}
+
+
+module 'LED Display' Output
+author MicroBlocks
+version 1 9 
+choices led_imageMenu heart 'small heart' yes no happy sad confused angry asleep surprised silly fabulous meh 't-shirt' 'roller skate' duck house tortoise butterfly 'stick figure' ghost sword giraffe skull umbrella snake rabbit cow 'quarter note' 'eight note' pitchfork target triangle 'left triangle' 'chess board' diamond 'small diamond' square 'small square' scissors 
+description 'Display primitives for the 5x5 LED display on the BBC micro:bit, Calliope mini and M5Atom Matrix. Boards with TFT displays (such as the Citilab ED1 or the M5Stack family) support these primitives with a simulated "fat pixel" display.'
+variables _stop_scrolling_text 
+
+  spec ' ' '[display:mbDisplay]' 'display _' 'microbitDisplay' 15237440
+  spec ' ' 'led_displayImage' 'display image _ : x _ y _' 'menu.led_imageMenu num num' 'happy' 1 1
+  spec ' ' '[display:mbDisplayOff]' 'clear display'
+  space
+  spec ' ' '[display:mbPlot]' 'plot x _ y _' 'num num' 3 3
+  spec ' ' '[display:mbUnplot]' 'unplot x _ y _' 'num num' 3 3
+  space
+  spec ' ' 'displayCharacter' 'display character _' 'str' 'A'
+  spec ' ' 'scroll_text' 'scroll text _ : pausing _ ms' 'str num' 'HELLO ROSA!' 100
+  spec ' ' 'stopScrollingText' 'stop scrolling'
+  space
+  spec 'r' '_led_image' 'led image _' 'microbitDisplay' 15237440
+  spec 'r' '_led_namedImage' '_led_namedImage _' 'menu.led_imageMenu' 'happy'
+  spec 'r' '_led_imageData' '_led_imageData'
+  spec ' ' 'set display color' 'set display color _' 'color'
+
+to '_led_image' twentyFiveBitInt {
+  comment 'An LED image is a 25-bit integer'
+  return twentyFiveBitInt
+}
+
+to '_led_imageData' {
+  return 'heart:4685802,small heart:145728,yes:2269696,no:18157905,happy:15237440,sad:18284864,confused:22348096,angry:23036241,asleep:459616,surprised:4526090,silly:25984017,fabulous:15008639,meh:2236443,t-shirt:15154043,roller skate:11534104,duck:489702,house:10976708,tortoise:359872,butterfly:29332475,stick figure:18158564,ghost:23068334,sword:4657284,giraffe:10946627,skull:15171246,umbrella:6460398,snake:469859,rabbit:16104613,cow:4685361,quarter note:7573636,eight note:7590276,pitchfork:4357813,target:4681156,triangle:1026176,left triangle:32805985,chess board:11184810,diamond:4539716,small diamond:141440,square:33080895,small square:469440,scissors:20287859,'
+}
+
+to '_led_namedImage' name {
+  local 'data' ('_led_imageData')
+  local 'i' ('[data:find]' name data)
+  if (i == -1) {
+    comment 'Name not found'
+    return 0
+  }
+  local 'start' (('[data:find]' ':' data i) + 1)
+  local 'end' (('[data:find]' ',' data i) - 1)
+  return ('[data:convertType]' ('[data:copyFromTo]' data start end) 'number')
+}
+
+to displayCharacter s {
+  s = ('[data:join]' '' s)
+  if ((size s) == 0) {
+    '[display:mbDisplayOff]'
+    return 0
+  }
+  '[display:mbDrawShape]' ('[display:mbShapeForLetter]' (at 1 s))
+}
+
+to led_displayImage imageName optionalX optionalY {
+  local 'image' imageName
+  if (isType image 'string') {
+    image = ('_led_namedImage' imageName)
+  }
+  '[display:mbDrawShape]' image (argOrDefault 2 1) (argOrDefault 3 1)
+}
+
+to scroll_text text optionalDelay {
+  text = ('[data:join]' '' text)
+  local 'delay' 100
+  if ((pushArgCount) > 1) {
+    delay = optionalDelay
+  }
+  _stop_scrolling_text = (booleanConstant false)
+  if ('Pico:ed' == (boardType)) {
+    for position (((size text) * 6) + 18) {
+      if _stop_scrolling_text {return 0}
+      '[display:mbDisplayOff]'
+      '[tft:text]' text (17 - position) 0 (colorSwatch 125 125 125 255) 1 true
+      waitMillis (delay / 2)
+    }
+  } else {
+    for position (((size text) * 6) + 6) {
+      if _stop_scrolling_text {return 0}
+      for i (size text) {
+        '[display:mbDrawShape]' ('[display:mbShapeForLetter]' ('[data:unicodeAt]' i text)) (((i * 6) + 2) - position) 1
+      }
+      waitMillis delay
+    }
+  }
+}
+
+to 'set display color' color {
+  callCustomCommand '[display:mbSetColor]' ('[data:makeList]' color)
+}
+
+to stopScrollingText {
+  _stop_scrolling_text = (booleanConstant true)
+  waitMillis 10
+  '[display:mbDisplayOff]'
+}
+
+
+module Servo Output
+author MicroBlocks
+version 1 3 
+tags servo motor angle rotation position 
+description 'Control both positional (angle) and rotational servo motors.
+'
+variables _servoPin _servoPulseWidth 
+
+  spec ' ' 'setServoAngle' 'set servo _ to _ degrees (-90 to 90)' 'num num' 1 90
+  spec ' ' 'setServoSpeed' 'set servo _ to speed _ (-100 to 100)' 'num num' 1 100
+  spec ' ' 'stopServo' 'stop servo _' 'num' 1
+  spec 'r' '_servoIndex' '_servoIndex _' 'num' 1
+  spec ' ' '_servoPulse' '_servoPulse pin _ usecs _' 'num num' 1 1500
+  spec ' ' '_servoUpdateLoop' '_servoUpdateLoop'
+
+to '_servoIndex' which {
+  if (_servoPin == 0) {
+    _servoPin = ('[data:makeList]')
+    _servoPulseWidth = ('[data:makeList]')
+    sendBroadcast '_servoUpdateLoop'
+  }
+  local 'i' ('[data:find]' which _servoPin)
+  if (i < 0) {
+    comment 'Add new pin'
+    '[data:addLast]' which _servoPin
+    '[data:addLast]' '1500' _servoPulseWidth
+    i = (size _servoPin)
+  }
+  return i
+}
+
+to '_servoPulse' pin usecs {
+  if (usecs == 0) {
+    comment 'Servo stopped; do nothing'
+    return 0
+  }
+  usecs = (maximum 850 (minimum usecs 2150))
+  comment 'Split wait into a long wait followed by a wait of <= 30 usecs for greater accuracy'
+  local 'endTime' ((microsOp) + usecs)
+  digitalWriteOp pin true
+  waitMicros (usecs - 30)
+  waitMicros (endTime - (microsOp))
+  digitalWriteOp pin false
+}
+
+to '_servoUpdateLoop' {
+  forever {
+    if (_servoPin != 0) {
+      comment 'If the _servoPin list is not 0, update the servos'
+      for i (size _servoPin) {
+        local 'pin' (at i _servoPin)
+        local 'usecs' (at i _servoPulseWidth)
+        if (and (pin >= 0) (usecs != 0)) {
+          '_servoPulse' pin usecs
+        }
+      }
+      waitMillis 15
+    }
+  }
+}
+
+to setServoAngle which degrees optionalReverse {
+  local 'reversed' false
+  if ((pushArgCount) > 2) {
+    reversed = optionalReverse
+  }
+  if reversed {
+    degrees = (0 - degrees)
+  }
+  local 'pulseWidth' (1500 - (10 * degrees))
+  if ('[io:hasServo]') {
+    '[io:setServo]' which pulseWidth
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth pulseWidth
+  }
+}
+
+to setServoSpeed which speed optionalReverse {
+  local 'reversed' false
+  if ((pushArgCount) > 2) {
+    reversed = optionalReverse
+  }
+  if reversed {
+    speed = (0 - speed)
+  }
+  local 'pulseWidth' (1500 - (10 * speed))
+  if ((absoluteValue speed) < 2) {
+    pulseWidth = 0
+  }
+  if ('[io:hasServo]') {
+    '[io:setServo]' which pulseWidth
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth pulseWidth
+  }
+}
+
+to stopServo which {
+  if ('[io:hasServo]') {
+    '[io:setServo]' which 0
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth 0
+  }
+}
+
+
+module WiFi Comm
+author MicroBlocks
+version 1 8 
+tags communication network 
+description 'Connect to a WiFi network. Used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+  spec ' ' 'wifiConnect' 'wifi connect to _ password _ : IP _ gateway _ subnet _' 'str str auto auto auto' 'Network_Name' '' '192.168.1.42' '192.168.1.1' '255.255.255.0'
+  spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+  space
+  spec 'r' 'getIPAddress' 'IP address'
+  spec 'r' '[net:myMAC]' 'MAC address'
+  space
+  spec ' ' '[net:allowWiFiAndBLE]' 'allow WiFi while using BLE _' 'bool' true
+
+to getIPAddress {
+  return ('[net:myIPAddress]')
+}
+
+to wifiConnect ssid password fixedIP gatewayIP subnetIP {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:stopWiFi]'
+  if ((pushArgCount) < 5) {
+    '[net:startWiFi]' ssid password
+  } else {
+    '[net:startWiFi]' ssid password false fixedIP gatewayIP subnetIP
+  }
+  local 'startMSecs' (millisOp)
+  repeatUntil (('[net:myIPAddress]') != '0.0.0.0') {
+    comment 'Timeout after N seconds'
+    if (((millisOp) - startMSecs) > 30000) {
+      sayIt 'Could not connect'
+      return 0
+    }
+    comment 'Slow blink while trying to connect'
+    setUserLED true
+    waitMillis 300
+    setUserLED false
+    waitMillis 300
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {
+  if (not ('[net:hasWiFi]')) {return}
+  if ((size password) < 8) {
+    sayIt 'Password must be at least 8 characters'
+    return 0
+  }
+  '[net:startWiFi]' ssid password true
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Could not create hotspot'
+    return 0
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+
+module microSTEAMakers
+author 'Joan Guillén'
+version 1 6 
+depends Tone Color 
+tags keyestudio steam 
+choices ms_led_imageMenu heart 'small heart' yes no happy sad confused angry asleep surprised silly fabulous meh 't-shirt' 'roller skate' duck house tortoise butterfly 'stick figure' ghost sword giraffe skull umbrella snake rabbit cow 'quarter note' 'eight note' pitchfork target triangle 'left triangle' 'chess board' diamond 'small diamond' square 'small square' scissors 
+choices ms_inclination 'ms;down' x y 
+choices ms_accel x y z 
+choices ms_energy mA mV mW 
+choices ms_energyMeter 'ms;start' 'ms;stop' 'ms;reset' 
+description 'Provides custom blocks for the micro:STEAMakers, an ESP32 board with WiFi, BLE, 5x5 RGB LED matrix, 2 buttons, touch, light, sound, temperature and humidity sensors, six-axis accelerometer/gyroscope, energy control, and GPIO and I2C pins for additional extensions.
+'
+variables _ms_neoPixels _ms_neoPixels_scale _ms_scrolling_stopped _ms_energyReading _ms_energySum _ms_aht20_on _ms_aht20_reading _ms_aht20_data _ms_MPU6050_on _ms_MPU6050_add 
+
+  spec ' ' 'ms_display' 'ms display #BR# _ _ _ _ _ #BR# _ _ _ _ _ #BR# _ _ _ _ _ #BR# _ _ _ _ _ #BR# _ _ _ _ _' 'color color color color color color color color color color color color color color color color color color color color color color color color color'
+  spec ' ' 'ms_clear_display' 'ms clear display'
+  spec ' ' 'ms_setGlobalBrightnessScale' 'ms scale brightness to _ %' 'num' 100
+  spec ' ' 'ms_plot' 'ms plot x _ y _ with _' 'num num color' 3 3
+  spec ' ' 'ms_unplot' 'ms unplot x _ y _' 'num num' 3 3
+  space
+  spec 'r' 'ms_touching' 'ms touching ?'
+  spec 'r' 'ms_light' 'ms light'
+  spec 'r' 'ms_sound' 'ms sound'
+  spec 'r' 'ms_temperature' 'ms temperature ºC'
+  spec 'r' 'ms_humidity' 'ms humidity %'
+  space
+  spec 'r' 'ms_accel' 'ms accel _ m/s2' 'menu.ms_accel' 'x'
+  spec 'r' 'ms_gyro' 'ms gyro _ deg/s' 'menu.ms_accel' 'x'
+  spec 'r' 'ms_inclination' 'ms inclination towards _ º' 'menu.ms_inclination' 'ms;down'
+  space
+  spec 'r' 'ms_energy' 'ms energy _' 'menu.ms_energy' 'mW'
+  spec ' ' 'ms_energyMeter' 'ms _ energy meter' 'menu.ms_energyMeter' 'ms;start'
+  spec 'r' 'ms_energyConsumption' 'ms energy consumption (µWh)'
+  space
+  spec ' ' '_ms_neoPixels_setup' '_ms_neoPixels_setup'
+  spec ' ' '_ms_neoPixels_update' '_ms_neoPixels_update'
+  spec 'r' '_ms_imageNames' '_ms_imageNames'
+  spec ' ' '_ms_aht20_setup' '_ms_aht20_setup'
+  spec ' ' '_ms_aht20_getData' '_ms_aht20_getData'
+  spec ' ' '_ms_MPU6050_setup' '_ms_MPU6050_setup'
+  spec ' ' '_ms_energy_read_loop' '_ms_energy_read_loop'
+
+to '_ms_MPU6050_setup' {
+  _ms_MPU6050_add = (hexToInt '68')
+  comment 'setclockSource  0x01'
+  local 'value' (i2cGet _ms_MPU6050_add (hexToInt '6b'))
+  value = (value & (hexToInt 'F8'))
+  value = (value | (hexToInt '01'))
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '6B') value)
+  comment 'setScale amb MPU6050_SCALE_2000DPS -> 0x03'
+  comment 'dpsPerDigit = .060975f'
+  local 'value' (i2cGet _ms_MPU6050_add (hexToInt '1B'))
+  value = (value & (hexToInt 'E7'))
+  value = (value | (3 << 3))
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '1B') value)
+  comment 'setRange amb MPU6050_RANGE_2G -> 0x00'
+  comment 'rangePerDigit = .000061f'
+  local 'value' (i2cGet _ms_MPU6050_add (hexToInt '1C'))
+  value = (value & (hexToInt 'E7'))
+  value = (value | (0 << 3))
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '1C') value)
+  comment 'setSleepEnabled -> false'
+  comment 'registerBit (0x6B,6)'
+  local 'value' (i2cGet _ms_MPU6050_add (hexToInt '6B'))
+  value = (value & ('~' (1 << 6)))
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '6B') value)
+}
+
+to '_ms_aht20_getData' {
+  if (not _ms_aht20_on) {'_ms_aht20_setup'}
+  _ms_aht20_reading = (booleanConstant true)
+  local 'aht20_read' (newList 6)
+  '[sensors:i2cWrite]' (hexToInt '38') ('[data:makeList]' (hexToInt 'AC') (hexToInt '33') (hexToInt '00'))
+  waitMillis 75
+  '[sensors:i2cRead]' (hexToInt '38') aht20_read
+  _ms_aht20_data = aht20_read
+  _ms_aht20_reading = (booleanConstant false)
+}
+
+to '_ms_aht20_setup' {
+  '[sensors:i2cWrite]' (hexToInt '38') ('[data:makeList]' (hexToInt 'BE') (hexToInt '08') (hexToInt '00'))
+  '[sensors:i2cWrite]' (hexToInt '38') ('[data:makeList]' (hexToInt 'AC') (hexToInt '33') (hexToInt '00'))
+  _ms_aht20_on = (booleanConstant true)
+  waitMillis 75
+}
+
+to '_ms_energy_read_loop' {
+  repeatUntil (not _ms_energyReading) {
+    _ms_energySum = (_ms_energySum + (ms_energy 'mA'))
+    waitMillis 1000
+  }
+}
+
+to '_ms_imageNames' {
+  return '{"heart":4685802, "small heart":145728, "yes":2269696, "no":18157905, "happy":15237440, "sad":18284864, "confused":22348096, "angry":23036241, "asleep":459616, "surprised":4526090, "silly":25984017, "fabulous":15008639, "meh":2236443, "t-shirt":15154043, "roller skate":11534104, "duck":489702, "house":10976708, "tortoise":359872, "butterfly":29332475, "stick figure":18158564, "ghost":23068334, "sword":4657284, "giraffe":10946627, "skull":15171246, "umbrella":6460398, "snake":469859, "rabbit":16104613, "cow":4685361, "quarter note":7573636, "eight note":7590276, "pitchfork":4357813, "target":4681156, "triangle":1026176, "left triangle":32805985, "chess board":11184810, "diamond":4539716, "small diamond":141440, "square":33080895, "small square":469440, "scissors":20287859}'
+}
+
+to '_ms_neoPixels_setup' {
+  '[display:mbDisplayOff]'
+  waitMicros 300
+  if (_ms_neoPixels == 0) {
+    _ms_neoPixels = (newList 25 0)
+  }
+  _ms_neoPixels_scale = 100
+}
+
+to '_ms_neoPixels_update' {
+  comment 'Alway set the NeoPixel pin; may have been changed by another library.'
+  '[display:neoPixelSetPin]' 3 false
+  if (100 == _ms_neoPixels_scale) {
+    '[display:neoPixelSend]' _ms_neoPixels
+  } else {
+    local 'currentPixels' (newList 25)
+    local 'adjustedScale' ('[misc:rescale]' _ms_neoPixels_scale 0 100 31 100)
+    adjustedScale = (maximum 0 (minimum adjustedScale 100))
+    for pix 25 {
+      atPut pix currentPixels ('[misc:hsvColor]' ('[misc:hue]' (at pix _ms_neoPixels)) ('[misc:saturation]' (at pix _ms_neoPixels)) ((('[misc:brightness]' (at pix _ms_neoPixels)) * adjustedScale) / 100))
+    }
+    '[display:neoPixelSend]' currentPixels
+  }
+  waitMicros 300
+}
+
+to ms_accel axis {
+  if (not _ms_MPU6050_on) {'_ms_MPU6050_setup'}
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '3B'))
+  local 'reading' (newList 6)
+  '[sensors:i2cRead]' _ms_MPU6050_add reading
+  local 'msB' 3
+  local 'lsB' 4
+  local 'direction' -1
+  if (axis == 'y') {
+    msB = 1
+    lsB = 2
+    direction = 1
+  }
+  if (axis == 'z') {
+    msB = 5
+    lsB = 6
+    direction = 1
+  }
+  local 'result' (at msB reading)
+  if ((result >> 7) == 1) {
+    result = (-1 * (('~' result) & 127))
+  }
+  return (direction * (((result << 8) | (at lsB reading)) / 1672))
+}
+
+to ms_clear_display {
+  '_ms_neoPixels_setup'
+  atPut 'all' _ms_neoPixels 0
+  '_ms_neoPixels_update'
+  '[display:mbDisplayOff]'
+}
+
+to ms_display c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 c16 c17 c18 c19 c20 c21 c22 c23 c24 c25 {
+  '_ms_neoPixels_setup'
+  for i 25 {
+    atPut i _ms_neoPixels (argOrDefault i 0)
+  }
+  '_ms_neoPixels_update'
+}
+
+to ms_energy op {
+  if (op == 'mV') {return 3300}
+  local 'ampCounter' 0
+  for i 500 {
+    ampCounter = (ampCounter + (analogReadOp 23))
+  }
+  ampCounter = (ampCounter * 2)
+  ampCounter = ((ampCounter * 428) + 43560611)
+  ampCounter = (ampCounter / 1000000)
+  if (op == 'mA') {
+    return ampCounter
+  } (op == 'mW') {
+    return ((ampCounter * 3300) / 1000)
+  } else {
+    return
+  }
+}
+
+to ms_energyConsumption {
+  return ((_ms_energySum * 33) / 36)
+}
+
+to ms_energyMeter op {
+  if (op == 'ms;start') {
+    _ms_energyReading = (booleanConstant true)
+    sendBroadcast '_ms_energy_read_loop'
+  } (op == 'stop') {
+    _ms_energyReading = (booleanConstant false)
+  } (op == 'reset') {
+    _ms_energySum = 0
+  }
+}
+
+to ms_gyro axis {
+  if (not _ms_MPU6050_on) {'_ms_MPU6050_setup'}
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '43'))
+  local 'reading' (newList 6)
+  '[sensors:i2cRead]' _ms_MPU6050_add reading
+  local 'msB' 3
+  local 'lsB' 4
+  local 'direction' 1
+  if (axis == 'y') {
+    msB = 1
+    lsB = 2
+    direction = -1
+  }
+  if (axis == 'z') {
+    msB = 5
+    lsB = 6
+    direction = -1
+  }
+  local 'result' (at msB reading)
+  if ((result >> 7) == 1) {
+    result = (-1 * (('~' result) & 127))
+  }
+  return ((10 * direction) * (((result << 8) | (at lsB reading)) / 164))
+}
+
+to ms_humidity {
+  if (not _ms_aht20_reading) {'_ms_aht20_getData'}
+  local 'rawData' _ms_aht20_data
+  local 'calc' 0
+  calc = (at 2 rawData)
+  calc = (calc << 8)
+  calc = (calc + (at 3 rawData))
+  calc = (calc << 4)
+  calc = (calc + ((at 4 rawData) >> 4))
+  return ((calc * 100) / 1048576)
+}
+
+to ms_inclination op {
+  if (not _ms_MPU6050_on) {'_ms_MPU6050_setup'}
+  if (op == 'x') {return ((ms_accel 'x') * 9)}
+  if (op == 'y') {return ((ms_accel 'y') * 9)}
+  return (((ms_accel 'z') + 10) * 9)
+}
+
+to ms_light {
+  return (analogReadOp 24)
+}
+
+to ms_plot x y color {
+  '_ms_neoPixels_setup'
+  if (and (0 < x) (and (0 < y) (and (6 > x) (6 > y)))) {
+    atPut (x + ((y - 1) * 5)) _ms_neoPixels color
+    '_ms_neoPixels_update'
+  }
+}
+
+to ms_setGlobalBrightnessScale scale {
+  '_ms_neoPixels_setup'
+  _ms_neoPixels_scale = scale
+  '_ms_neoPixels_update'
+}
+
+to ms_sound {
+  return (analogReadOp 22)
+}
+
+to ms_temperature {
+  if (not _ms_aht20_reading) {'_ms_aht20_getData'}
+  local 'rawData' _ms_aht20_data
+  local 'calc' 0
+  calc = ((at 4 rawData) & (hexToInt '0f'))
+  calc = (calc << 8)
+  calc = (calc + (at 5 rawData))
+  calc = (calc << 8)
+  calc = (calc + (at 6 rawData))
+  return (((calc * 200) / 1048576) - 50)
+}
+
+to ms_touching {
+  return (('[sensors:touchRead]' 27) < 35)
+}
+
+to ms_unplot x y {
+  '_ms_neoPixels_setup'
+  if (and (0 < x) (and (0 < y) (and (6 > x) (6 > y)))) {
+    atPut (x + ((y - 1) * 5)) _ms_neoPixels 0
+    '_ms_neoPixels_update'
+  }
+}
+

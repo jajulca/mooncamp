@@ -1,0 +1,590 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables gesto 
+
+script 221 81 {
+whenStarted
+Setup 0 1
+forever {
+  gesto = ('paj7620 read')
+  if (gesto == 'up') {
+    move 'adelante' '5'
+    waitMillis 500
+  } (gesto == 'down') {
+    move 'atrás' '5'
+    waitMillis 500
+  } (gesto == 'left') {
+    move 'izquierda' '5'
+    waitMillis 500
+  } (gesto == 'right') {
+    move 'derecha' '5'
+    waitMillis 500
+  } (gesto == '?') {
+    move 'parar' '0'
+  }
+}
+}
+
+script 795 404 {
+sayIt gesto
+}
+
+
+module 'Basic Sensors' Input
+author MicroBlocks
+version 1 1 
+tags tilt acceleration light sensor 
+choices accelerometerRange '1' '2' '4' '8' 
+description 'Provides blocks to read tilt in the three axes, acceleration, temperature and light level. Many boards come with this particular set of sensors, such as the micro:bit, the Circuit Playground Express, the Calliope or the Citilab ED1.'
+
+  spec 'r' '[sensors:tiltX]' 'tilt x'
+  spec 'r' '[sensors:tiltY]' 'tilt y'
+  spec 'r' '[sensors:tiltZ]' 'tilt z'
+  spec 'r' '[sensors:acceleration]' 'acceleration'
+  spec 'r' '[display:lightLevel]' 'light level'
+  spec 'r' '[sensors:temperature]' 'temperature (°C)'
+  spec 'r' '[sensors:magneticField]' 'magnetic field'
+  spec ' ' '_setAccelRange' 'set acceleration range _ g = 100' 'menu.accelerometerRange' '1'
+
+to '_setAccelRange' n {
+  '[sensors:setAccelerometerRange]' (0 + n)
+}
+
+
+module Eserover
+author 'por Pedro Ruiz'
+version 1 0 
+depends Servo 
+choices esero_velocity '0' '1' '2' '3' '4' '5' '6' '7' '8' '9' '10' 
+choices esero_action adelante 'atrás' parar izquierda derecha 
+description ''
+variables _pinRightRover _pinLeftRover 
+
+  spec ' ' 'move' 'mover _ a velocidad _' 'menu.esero_action menu.esero_velocity' 'adelante' '0'
+  spec ' ' 'Setup' 'configurar pines izqd. _ derch. _' 'auto auto' '' ''
+
+to Setup pinL pinR {
+  _pinLeftRover = pinL
+  _pinRightRover = pinR
+}
+
+to move action velocity {
+  if (action == 'adelante') {
+    local 'direction0' -1
+    local 'direction1' 1
+  } (action == 'atrás') {
+    local 'direction0' 1
+    local 'direction1' -1
+  } (action == 'derecha') {
+    local 'direction0' -1
+    local 'direction1' -1
+  } (action == 'izquierda') {
+    local 'direction0' 1
+    local 'direction1' 1
+  } (action == 'parar') {
+    local 'direction0' 0
+    local 'direction1' 0
+  }
+  setServoAngle _pinLeftRover (('[misc:rescale]' velocity 0 10 0 90) * direction0)
+  setServoAngle _pinRightRover (('[misc:rescale]' velocity 0 10 0 90) * direction1)
+}
+
+
+module 'Gesture (PAJ7620)' Input
+author 'José García'
+version 1 0 
+tags sensor gesture 
+description 'Support for PAJ7620 gesture sensor.
+The "read" block returns the name of the detected gesture.
+Based on github.com/Seeed-Studio/Gesture_PAJ7620'
+variables '_paj7620 initialized' 
+
+  spec 'r' 'paj7620 read' 'paj7620 read'
+  spec ' ' '_paj7620 setup' '_paj7620 setup'
+  spec 'r' 'paj7620 connected' 'paj7620 connected'
+  spec ' ' '_paj7620 setup bank0' '_paj7620 setup bank0'
+  spec ' ' '_paj7620 setup bank1' '_paj7620 setup bank1'
+
+to '_paj7620 setup' {
+  if ('paj7620 connected') {
+    '_paj7620 setup bank0'
+    '_paj7620 setup bank1'
+    i2cSet (hexToInt '73') (hexToInt '65') (hexToInt '12')
+    i2cSet (hexToInt '73') (hexToInt 'EF') 0
+    '_paj7620 initialized' = 1
+  }
+}
+
+to '_paj7620 setup bank0' {
+  i2cSet (hexToInt '73') (hexToInt 'EF') 0
+  local 'i' 1
+  local 'list' '3229
+3301
+3400
+3501
+3600
+3707
+3817
+3906
+3A12
+3F00
+4002
+41FF
+4201
+462D
+470F
+483C
+4900
+4A1E
+4B00
+4C20
+4D00
+4E1A
+4F14
+5000
+5110
+5200
+5C02
+5D00
+5E10
+5F3F
+6027
+6128
+6200
+6303
+64F7
+6503
+66D9
+6703
+6801
+69C8
+6A40
+6D04
+6E00
+6F00
+7080
+7100
+7200
+7300
+74F0
+7500
+8042
+8144
+8204
+8320
+8420
+8500
+8610
+8700
+8805
+8918
+8A10
+8B01
+8C37
+8D00
+8EF0
+8F81
+9006
+9106
+921E
+930D
+940A
+950A
+960C
+9705
+980A
+9941
+9A14
+9B0A
+9C3F
+9D33
+9EAE
+9FF9
+A048
+A113
+A210
+A308
+A430
+A519
+A610
+A708
+A824
+A904
+AA1E
+AB1E
+CC19
+CD0B
+CE13
+CF64
+D021
+D10F
+D288
+E001
+E104
+E241
+E3D6
+E400
+E50C
+E60A
+E700
+E800
+E900
+EE07'
+  repeatUntil (i > (size list)) {
+    local 'reg' ('[data:copyFromTo]' list i (i + 1))
+    local 'val' ('[data:copyFromTo]' list (i + 2) (i + 4))
+    i2cSet (hexToInt '73') (hexToInt reg) (hexToInt val)
+    i += 5
+    waitMicros 10
+  }
+}
+
+to '_paj7620 setup bank1' {
+  i2cSet (hexToInt '73') (hexToInt 'EF') 1
+  local 'i' 1
+  local 'list' '001E
+011E
+020F
+0310
+0402
+0500
+06B0
+0704
+080D
+090E
+0A9C
+0B04
+0C05
+0D0F
+0E02
+0F12
+1002
+1102
+1200
+1301
+1405
+1507
+1605
+1707
+1801
+1904
+1A05
+1B0C
+1C2A
+1D01
+1E00
+2100
+2200
+2300
+2501
+2600
+2739
+287F
+2908
+3003
+3100
+321A
+331A
+3407
+3507
+3601
+37FF
+3836
+3907
+3A00
+3EFF
+3F00
+4077
+4140
+4200
+4330
+44A0
+455C
+4600
+4700
+4858
+4A1E
+4B1E
+4C00
+4D00
+4EA0
+4F80
+5000
+5100
+5200
+5300
+5400
+5780
+5910
+5A08
+5B94
+5CE8
+5D08
+5E3D
+5F99
+6045
+6140
+632D
+6402
+6596
+6600
+6797
+6801
+69CD
+6A01
+6BB0
+6C04
+6D2C
+6E01
+6F32
+7100
+7201
+7335
+7400
+7533
+7631
+7701
+7C84
+7D03
+7E01'
+  repeatUntil (i > (size list)) {
+    local 'reg' ('[data:copyFromTo]' list i (i + 1))
+    local 'val' ('[data:copyFromTo]' list (i + 2) (i + 4))
+    i2cSet (hexToInt '73') (hexToInt reg) (hexToInt val)
+    i += 5
+    waitMicros 10
+  }
+}
+
+to 'paj7620 connected' {
+  return (and ((i2cGet (hexToInt '73') 0) == 32) ((i2cGet (hexToInt '73') 1) == 118))
+}
+
+to 'paj7620 read' {
+  if ((v '_paj7620 initialized') == 0) {'_paj7620 setup'}
+  local 'msg' '?'
+  local 'g' (i2cGet (hexToInt '73') (hexToInt '43'))
+  if ((g & 1) != 0) {
+    msg = 'right'
+  } ((g & 2) != 0) {
+    msg = 'left'
+  } ((g & 4) != 0) {
+    msg = 'up'
+  } ((g & 8) != 0) {
+    msg = 'down'
+  } ((g & 16) != 0) {
+    msg = 'fordward'
+  } ((g & 32) != 0) {
+    msg = 'backward'
+  } ((g & 64) != 0) {
+    msg = 'clockwise'
+  } ((g & 128) != 0) {
+    msg = 'anti-clockwise'
+  }
+  return msg
+}
+
+
+module 'LED Display' Output
+author MicroBlocks
+version 1 9 
+choices led_imageMenu heart 'small heart' yes no happy sad confused angry asleep surprised silly fabulous meh 't-shirt' 'roller skate' duck house tortoise butterfly 'stick figure' ghost sword giraffe skull umbrella snake rabbit cow 'quarter note' 'eight note' pitchfork target triangle 'left triangle' 'chess board' diamond 'small diamond' square 'small square' scissors 
+description 'Display primitives for the 5x5 LED display on the BBC micro:bit, Calliope mini and M5Atom Matrix. Boards with TFT displays (such as the Citilab ED1 or the M5Stack family) support these primitives with a simulated "fat pixel" display.'
+variables _stop_scrolling_text 
+
+  spec ' ' '[display:mbDisplay]' 'display _' 'microbitDisplay' 15237440
+  spec ' ' 'led_displayImage' 'display image _ : x _ y _' 'menu.led_imageMenu num num' 'happy' 1 1
+  spec ' ' '[display:mbDisplayOff]' 'clear display'
+  space
+  spec ' ' '[display:mbPlot]' 'plot x _ y _' 'num num' 3 3
+  spec ' ' '[display:mbUnplot]' 'unplot x _ y _' 'num num' 3 3
+  space
+  spec ' ' 'displayCharacter' 'display character _' 'str' 'A'
+  spec ' ' 'scroll_text' 'scroll text _ : pausing _ ms' 'str num' 'HELLO ROSA!' 100
+  spec ' ' 'stopScrollingText' 'stop scrolling'
+  space
+  spec 'r' '_led_image' 'led image _' 'microbitDisplay' 15237440
+  spec 'r' '_led_namedImage' '_led_namedImage _' 'menu.led_imageMenu' 'happy'
+  spec 'r' '_led_imageData' '_led_imageData'
+  spec ' ' 'set display color' 'set display color _' 'color'
+
+to '_led_image' twentyFiveBitInt {
+  comment 'An LED image is a 25-bit integer'
+  return twentyFiveBitInt
+}
+
+to '_led_imageData' {
+  return 'heart:4685802,small heart:145728,yes:2269696,no:18157905,happy:15237440,sad:18284864,confused:22348096,angry:23036241,asleep:459616,surprised:4526090,silly:25984017,fabulous:15008639,meh:2236443,t-shirt:15154043,roller skate:11534104,duck:489702,house:10976708,tortoise:359872,butterfly:29332475,stick figure:18158564,ghost:23068334,sword:4657284,giraffe:10946627,skull:15171246,umbrella:6460398,snake:469859,rabbit:16104613,cow:4685361,quarter note:7573636,eight note:7590276,pitchfork:4357813,target:4681156,triangle:1026176,left triangle:32805985,chess board:11184810,diamond:4539716,small diamond:141440,square:33080895,small square:469440,scissors:20287859,'
+}
+
+to '_led_namedImage' name {
+  local 'data' ('_led_imageData')
+  local 'i' ('[data:find]' name data)
+  if (i == -1) {
+    comment 'Name not found'
+    return 0
+  }
+  local 'start' (('[data:find]' ':' data i) + 1)
+  local 'end' (('[data:find]' ',' data i) - 1)
+  return ('[data:convertType]' ('[data:copyFromTo]' data start end) 'number')
+}
+
+to displayCharacter s {
+  s = ('[data:join]' '' s)
+  if ((size s) == 0) {
+    '[display:mbDisplayOff]'
+    return 0
+  }
+  '[display:mbDrawShape]' ('[display:mbShapeForLetter]' (at 1 s))
+}
+
+to led_displayImage imageName optionalX optionalY {
+  local 'image' imageName
+  if (isType image 'string') {
+    image = ('_led_namedImage' imageName)
+  }
+  '[display:mbDrawShape]' image (argOrDefault 2 1) (argOrDefault 3 1)
+}
+
+to scroll_text text optionalDelay {
+  text = ('[data:join]' '' text)
+  local 'delay' 100
+  if ((pushArgCount) > 1) {
+    delay = optionalDelay
+  }
+  _stop_scrolling_text = (booleanConstant false)
+  if ('Pico:ed' == (boardType)) {
+    for position (((size text) * 6) + 18) {
+      if _stop_scrolling_text {return 0}
+      '[display:mbDisplayOff]'
+      '[tft:text]' text (17 - position) 0 (colorSwatch 125 125 125 255) 1 true
+      waitMillis (delay / 2)
+    }
+  } else {
+    for position (((size text) * 6) + 6) {
+      if _stop_scrolling_text {return 0}
+      for i (size text) {
+        '[display:mbDrawShape]' ('[display:mbShapeForLetter]' ('[data:unicodeAt]' i text)) (((i * 6) + 2) - position) 1
+      }
+      waitMillis delay
+    }
+  }
+}
+
+to 'set display color' color {
+  callCustomCommand '[display:mbSetColor]' ('[data:makeList]' color)
+}
+
+to stopScrollingText {
+  _stop_scrolling_text = (booleanConstant true)
+  waitMillis 10
+  '[display:mbDisplayOff]'
+}
+
+
+module Servo Output
+author MicroBlocks
+version 1 3 
+tags servo motor angle rotation position 
+description 'Control both positional (angle) and rotational servo motors.
+'
+variables _servoPin _servoPulseWidth 
+
+  spec ' ' 'setServoAngle' 'set servo _ to _ degrees (-90 to 90)' 'num num' 1 90
+  spec ' ' 'setServoSpeed' 'set servo _ to speed _ (-100 to 100)' 'num num' 1 100
+  spec ' ' 'stopServo' 'stop servo _' 'num' 1
+  spec 'r' '_servoIndex' '_servoIndex _' 'num' 1
+  spec ' ' '_servoPulse' '_servoPulse pin _ usecs _' 'num num' 1 1500
+  spec ' ' '_servoUpdateLoop' '_servoUpdateLoop'
+
+to '_servoIndex' which {
+  if (_servoPin == 0) {
+    _servoPin = ('[data:makeList]')
+    _servoPulseWidth = ('[data:makeList]')
+    sendBroadcast '_servoUpdateLoop'
+  }
+  local 'i' ('[data:find]' which _servoPin)
+  if (i < 0) {
+    comment 'Add new pin'
+    '[data:addLast]' which _servoPin
+    '[data:addLast]' '1500' _servoPulseWidth
+    i = (size _servoPin)
+  }
+  return i
+}
+
+to '_servoPulse' pin usecs {
+  if (usecs == 0) {
+    comment 'Servo stopped; do nothing'
+    return 0
+  }
+  usecs = (maximum 850 (minimum usecs 2150))
+  comment 'Split wait into a long wait followed by a wait of <= 30 usecs for greater accuracy'
+  local 'endTime' ((microsOp) + usecs)
+  digitalWriteOp pin true
+  waitMicros (usecs - 30)
+  waitMicros (endTime - (microsOp))
+  digitalWriteOp pin false
+}
+
+to '_servoUpdateLoop' {
+  forever {
+    if (_servoPin != 0) {
+      comment 'If the _servoPin list is not 0, update the servos'
+      for i (size _servoPin) {
+        local 'pin' (at i _servoPin)
+        local 'usecs' (at i _servoPulseWidth)
+        if (and (pin >= 0) (usecs != 0)) {
+          '_servoPulse' pin usecs
+        }
+      }
+      waitMillis 15
+    }
+  }
+}
+
+to setServoAngle which degrees optionalReverse {
+  local 'reversed' false
+  if ((pushArgCount) > 2) {
+    reversed = optionalReverse
+  }
+  if reversed {
+    degrees = (0 - degrees)
+  }
+  local 'pulseWidth' (1500 - (10 * degrees))
+  if ('[io:hasServo]') {
+    '[io:setServo]' which pulseWidth
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth pulseWidth
+  }
+}
+
+to setServoSpeed which speed optionalReverse {
+  local 'reversed' false
+  if ((pushArgCount) > 2) {
+    reversed = optionalReverse
+  }
+  if reversed {
+    speed = (0 - speed)
+  }
+  local 'pulseWidth' (1500 - (10 * speed))
+  if ((absoluteValue speed) < 2) {
+    pulseWidth = 0
+  }
+  if ('[io:hasServo]') {
+    '[io:setServo]' which pulseWidth
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth pulseWidth
+  }
+}
+
+to stopServo which {
+  if ('[io:hasServo]') {
+    '[io:setServo]' which 0
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth 0
+  }
+}
+

@@ -1,0 +1,40 @@
+module Eserover
+author 'por Pedro Ruiz'
+version 1 0 
+depends Servo 
+description ''
+comment 'Esto es un comentario'
+variables _pinRightRover _pinLeftRover 
+choices esero_action 'adelante' 'atrás' 'parar' 'izquierda' 'derecha' 
+choices esero_velocity '0' '1' '2' '3' '4' '5' '6' '7' '8' '9' '10'
+
+  spec ' ' 'move' 'mover _ a velocidad _' 'menu.esero_action menu.esero_velocity' 'adelante' '0'
+  spec ' ' 'Setup' 'configurar pines izqd. _ derch. _' 'auto auto' '' ''
+
+to Setup pinL pinR {
+  _pinLeftRover = pinL
+  _pinRightRover = pinR
+}
+
+to move action velocity {
+  if (action == 'adelante') {
+    local 'direction0' -1
+    local 'direction1' 1
+  } (action == 'atrás') {
+    local 'direction0' 1
+    local 'direction1' -1
+  } (action == 'derecha') {
+    local 'direction0' -1
+    local 'direction1' -1
+  } (action == 'izquierda') {
+    local 'direction0' 1
+    local 'direction1' 1
+  } (action == 'parar') {
+    local 'direction0' 0
+    local 'direction1' 0
+  }
+  
+  setServoAngle _pinLeftRover (('[misc:rescale]' velocity 0 10 0 90) * direction0)
+  setServoAngle _pinRightRover (('[misc:rescale]' velocity 0 10 0 90) * direction1)
+}
+
