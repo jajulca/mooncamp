@@ -1,0 +1,1416 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables mensaje 
+
+script 482 40 {
+whenCondition (bleRadio_messageReceived)
+mensaje = (bleRadio_receivedString)
+if (mensaje == 'f') {
+  'acción' 'adelante' '10'
+  ms_display (colorSwatch 0 0 0 255) (colorSwatch 4 4 4 255) (colorSwatch 35 190 30 255) (colorSwatch 5 5 5 255) (colorSwatch 2 2 2 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 2 2 2 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 6 6 6 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 5 5 5 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255)
+} (mensaje == 'b') {
+  'acción' 'atrás' '10'
+  ms_display (colorSwatch 12 12 12 255) (colorSwatch 2 2 2 255) (colorSwatch 35 190 30 255) (colorSwatch 2 2 2 255) (colorSwatch 0 0 0 255) (colorSwatch 5 5 5 255) (colorSwatch 1 1 1 255) (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 3 3 3 255) (colorSwatch 35 190 30 255) (colorSwatch 1 1 1 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 2 2 2 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255)
+} (mensaje == 'r') {
+  'acción' 'derecha' '10'
+  ms_display (colorSwatch 4 4 4 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 2 2 2 255) (colorSwatch 0 0 0 255) (colorSwatch 3 3 3 255) (colorSwatch 35 190 30 255) (colorSwatch 6 6 6 255) (colorSwatch 0 0 0 255) (colorSwatch 1 1 1 255) (colorSwatch 35 190 30 255) (colorSwatch 1 1 1 255) (colorSwatch 0 0 0 255)
+} (mensaje == 'l') {
+  'acción' 'izquierda' '10'
+  ms_display (colorSwatch 2 2 2 255) (colorSwatch 2 2 2 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 6 6 6 255) (colorSwatch 1 1 1 255) (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 2 2 2 255) (colorSwatch 0 0 0 255) (colorSwatch 12 12 12 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 3 3 3 255) (colorSwatch 0 0 0 255)
+} (mensaje == 's') {
+  'acción' 'parar' 0
+  ms_display (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 7 7 7 255) (colorSwatch 4 4 4 255) (colorSwatch 35 190 30 255) (colorSwatch 2 2 2 255) (colorSwatch 35 190 30 255) (colorSwatch 7 7 7 255) (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 0 0 0 255) (colorSwatch 1 1 1 255) (colorSwatch 35 190 30 255) (colorSwatch 1 1 1 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 5 5 5 255) (colorSwatch 4 4 4 255) (colorSwatch 6 6 6 255) (colorSwatch 35 190 30 255)
+}
+}
+
+script 40 73 {
+whenStarted
+'[ble:radioSetGroup]' 6
+ms_clear_display
+ms_display (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 7 7 7 255) (colorSwatch 4 4 4 255) (colorSwatch 35 190 30 255) (colorSwatch 2 2 2 255) (colorSwatch 35 190 30 255) (colorSwatch 7 7 7 255) (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 0 0 0 255) (colorSwatch 1 1 1 255) (colorSwatch 35 190 30 255) (colorSwatch 1 1 1 255) (colorSwatch 0 0 0 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 4 4 4 255) (colorSwatch 35 190 30 255) (colorSwatch 0 0 0 255) (colorSwatch 35 190 30 255) (colorSwatch 5 5 5 255) (colorSwatch 4 4 4 255) (colorSwatch 6 6 6 255) (colorSwatch 35 190 30 255)
+}
+
+
+module 'BLE Radio' Comm
+author MicroBlocks
+version 1 1 
+description 'This library supports easy message exchange among boards that support Bluetooth Low Energy (BLE).
+
+A message can contain a string, a number, or both. Messages are received by all boards in the same BLE radio group as the sender.
+
+This library is similar to the Radio library, but messages are sent via BLE advertisements instead of the Nordic radio system.
+'
+variables _bleRadio_lastNumber _bleRadio_lastString 
+
+  spec ' ' 'bleRadio_sendNumber' 'ble send number _' 'num' 123
+  spec ' ' 'bleRadio_sendString' 'ble send string _' 'str' 'Hello!'
+  spec ' ' 'bleRadio_sendPair' 'ble send pair _ = _' 'str num' 'light' 10
+  space
+  spec 'r' 'bleRadio_messageReceived' 'ble message received?'
+  spec 'r' 'bleRadio_receivedInteger' 'ble last number'
+  spec 'r' 'bleRadio_receivedString' 'ble last string'
+  space
+  spec ' ' '[ble:radioSetGroup]' 'ble set group _ (0-255)' 'num' 0
+
+to bleRadio_messageReceived {
+  local 'msg' ('[ble:radioReceive]')
+  if ((size msg) < 4) {
+    return (booleanConstant false)
+  }
+  _bleRadio_lastNumber = ((at 1 msg) | (((at 2 msg) << 8) | (((at 3 msg) << 16) | ((at 4 msg) << 24))))
+  local 'highByte' (at 4 msg)
+  if (and (64 <= highByte) (highByte <= 127)) {
+    _bleRadio_lastNumber = 'out of range number (positve)'
+  }
+  if (and (128 <= highByte) (highByte <= 191)) {
+    _bleRadio_lastNumber = 'out of range number (negative)'
+  }
+  _bleRadio_lastString = ('[data:join]' '' ('[data:copyFromTo]' msg 5))
+  return (booleanConstant true)
+}
+
+to bleRadio_receivedInteger {
+  return _bleRadio_lastNumber
+}
+
+to bleRadio_receivedString {
+  if (_bleRadio_lastString == 0) {_bleRadio_lastString = ''}
+  return _bleRadio_lastString
+}
+
+to bleRadio_sendNumber n {
+  bleRadio_sendPair '' n
+}
+
+to bleRadio_sendPair s n {
+  local 'msg' ('[data:newByteArray]' 4)
+  comment 'MicroBlocks BLE Radio message format:
+    MicroBlocks integer (4 bytes, LSB first)
+    string (UTF8, variable length)'
+  atPut 1 msg (n & 255)
+  atPut 2 msg ((n >> 8) & 255)
+  atPut 3 msg ((n >> 16) & 255)
+  atPut 4 msg ((n >> 24) & 255)
+  msg = ('[data:join]' msg ('[data:asByteArray]' s))
+  '[ble:radioStartBeam]' msg
+  waitMillis 500
+  '[ble:radioStopBeam]'
+}
+
+to bleRadio_sendString s {
+  bleRadio_sendPair s 0
+}
+
+
+module Color Operators
+author MicroBlocks
+version 1 1 
+description 'Support for color operations, Work with color hue, saturation, and brightness (HSV).'
+
+  spec 'r' 'color_colorSwatch' '_' 'color'
+  spec 'r' 'color_RGB' 'color r _ g _ b _ (0-255)' 'num num num' 0 100 100
+  spec 'r' 'color_gray' 'gray _ %' 'num' 50
+  spec 'r' 'color_random' 'random color'
+  space
+  spec 'r' 'color_red' 'red _' 'color'
+  spec 'r' 'color_green' 'green _' 'color'
+  spec 'r' 'color_blue' 'blue _' 'color'
+  space
+  spec 'r' '[misc:hsvColor]' 'color hue _ (0-360) saturation _ % brightness _ %' 'num num num' 0 90 100
+  spec 'r' '[misc:hue]' 'hue _' 'color'
+  spec 'r' '[misc:saturation]' 'saturation _' 'color'
+  spec 'r' '[misc:brightness]' 'brightness _' 'color'
+  space
+  spec 'r' 'color_withHue' '_ with hue _ (0-360)' 'color num' nil 60
+  spec 'r' 'color_withSaturation' '_ with saturation _ %' 'color num' nil 100
+  spec 'r' 'color_withBrightness' '_ with brightness _ %' 'color num' nil 100
+
+to color_RGB r g b {
+  r = (maximum 0 (minimum r 255))
+  g = (maximum 0 (minimum g 255))
+  b = (maximum 0 (minimum b 255))
+  return ((r << 16) | ((g << 8) | b))
+}
+
+to color_blue color {
+  return (color & 255)
+}
+
+to color_colorSwatch color {
+  return color
+}
+
+to color_gray percent {
+  gray = ((percent * 255) / 100)
+  gray = (maximum 0 (minimum gray 255))
+  return ((gray << 16) | ((gray << 8) | gray))
+}
+
+to color_green color {
+  return ((color >> 8) & 255)
+}
+
+to color_random {
+  local 'n1' (random 100 200)
+  local 'n2' (random 0 100)
+  if (1 == (random 1 3)) {
+    return ((n1 << 16) | (n2 << 8))
+  } (1 == (random 1 2)) {
+    return ((n2 << 16) | n1)
+  } else {
+    return ((n1 << 8) | n2)
+  }
+}
+
+to color_red color {
+  return ((color >> 16) & 255)
+}
+
+to color_withBrightness color brightness {
+  return ('[misc:hsvColor]' ('[misc:hue]' color) ('[misc:saturation]' color) brightness)
+}
+
+to color_withHue color hue {
+  return ('[misc:hsvColor]' hue ('[misc:saturation]' color) ('[misc:brightness]' color))
+}
+
+to color_withSaturation color saturation {
+  return ('[misc:hsvColor]' ('[misc:hue]' color) saturation ('[misc:brightness]' color))
+}
+
+
+module 'Distance (HC-SR04)' Input
+author 'Joan Guillén & Josep Ferràndiz'
+version 1 4 
+tags sensor 'hc-sr04' distance ultrasound 
+description 'Support for the HC-SR04 ultrasound distance sensor.'
+variables _sr04_last 
+
+  spec 'r' 'distance (cm)' 'distance (cm) trigger _ echo _' 'num num' 2 4
+  spec 'r' 'sr04_distanceOnePin' 'distance (cm) pin _' 'num' 0
+
+to 'distance (cm)' trig ech {
+  comment 'Contributed by Joan Guillén and Josep Ferràndiz'
+  digitalWriteOp trig false
+  waitMicros 2
+  digitalWriteOp trig true
+  waitMicros 50
+  digitalWriteOp trig false
+  local 'start' (microsOp)
+  waitUntil (or (not (digitalReadOp ech)) (((microsOp) - start) > 23320))
+  waitUntil (or (digitalReadOp ech) (((microsOp) - start) > 23320))
+  if (((microsOp) - start) > 23320) {
+    comment 'Distance sensor not ready; return the last distance reading'
+    return _sr04_last
+  }
+  comment 'Pulse sent. Measure time until echo is detected.'
+  start = (microsOp)
+  waitUntil (or (not (digitalReadOp ech)) (((microsOp) - start) > 23320))
+  _sr04_last = ((10 * ((microsOp) - start)) / 583)
+  comment 'Leave some time for reverberations to die away.'
+  waitMillis 10
+  return _sr04_last
+}
+
+to sr04_distanceOnePin pin {
+  return ('distance (cm)' pin pin)
+}
+
+
+module 'IR Remote' Comm
+author MicroBlocks
+version 1 8 
+tags ir infrared remote 
+description 'Sends and receives infrared remote control messages like the ones used for TV sets or air conditioners. Currently supports only the NEC protocol, which is quite common but not the only IR protocol in use. An NEC message consists of a one byte device number and a one byte command.
+
+Note: Transmitting IR does not work on ESP8266 boards.
+
+Receiving requires an IR receiver module, such as those built into the Circuit Playground Express and ED1 boards. Transmitting requires an IR transmitter LED, such as those built into the Circuit Playground Express and several M5 Stack products. Inexpensive IR LED transmitter and receivers are available for use with other boards.
+'
+variables _ir_pin _ir_pulse_times _ir_last_code _ir_last_device _ir_transmit_pin 
+
+  spec ' ' 'attachIR' 'attach IR receiver to pin _' 'num' 0
+  spec 'r' 'ir_code_received' 'IR code received?'
+  spec 'r' 'ir_last_code' 'IR code'
+  space
+  spec ' ' 'IR_Transmit' 'IR transmit device _ command _' 'num num' 48896 1
+  spec ' ' 'attachIRTransmitter' 'attach IR transmitter to pin _' 'num' 0
+  space
+  spec 'r' 'receiveIR' 'receive IR code'
+  space
+  spec ' ' '_testIR' '_test IR'
+  spec 'r' '_receiveIRFromDevice' '_receive IR code from device _' 'num' 48896
+  space
+  spec ' ' '_captureIRMessage' '_captureIRMessage' 'any'
+  spec ' ' '_dumpIR' '_dumpIR' 'any'
+  spec 'r' '_getIRByte' '_getIRByte _' 'auto any' 4
+  spec 'r' '_got32Bits' '_got32Bits' 'any'
+  spec ' ' '_IR_SendByte' '_IR_SendByte _' 'auto' '10'
+  spec ' ' 'timerIRCapture' 'timerIRCapture'
+  spec ' ' 'interruptIRCapture' 'interruptIRCapture'
+
+to IR_Transmit device command {
+  if (_ir_transmit_pin == 0) {if (or ((boardType) == 'CircuitPlayground') ((boardType) == 'M5Atom-Matrix')) {
+    _ir_transmit_pin = 12
+  } (or ((boardType) == 'M5StickC') ((boardType) == 'M5StickC+')) {
+    _ir_transmit_pin = 9
+  }}
+  comment 'Message start pulse and space'
+  '[io:playTone]' _ir_transmit_pin 38000
+  waitMicros 9000
+  '[io:playTone]' _ir_transmit_pin 0
+  waitMicros 4500
+  comment 'Send device and command and their inverses'
+  '_IR_SendByte' (device & 255)
+  '_IR_SendByte' ((device >> 8) & 255)
+  '_IR_SendByte' command
+  '_IR_SendByte' ('~' command)
+  comment 'Send stop bit'
+  '[io:playTone]' _ir_transmit_pin 38000
+  waitMicros 562
+  '[io:playTone]' _ir_transmit_pin 0
+  comment 'Turn off IR transmit LED'
+  if (or ((boardType) == 'M5StickC') ((boardType) == 'M5StickC+')) {
+    comment 'IR pin is inverted so true means "off"'
+    digitalWriteOp _ir_transmit_pin true
+  } else {
+    digitalWriteOp _ir_transmit_pin false
+  }
+}
+
+to '_IR_SendByte' byte {
+  local 'bit' 1
+  repeat 8 {
+    if (0 == (byte & bit)) {
+      '[io:playTone]' _ir_transmit_pin 38000
+      waitMicros 530
+      '[io:playTone]' _ir_transmit_pin 0
+      waitMicros 530
+    } else {
+      '[io:playTone]' _ir_transmit_pin 38000
+      waitMicros 530
+      '[io:playTone]' _ir_transmit_pin 0
+      waitMicros 1630
+    }
+    bit = (bit << 1)
+  }
+}
+
+to '_captureIRMessage' {
+  if (_ir_pulse_times == 0) {
+    _ir_pulse_times = (newList 100)
+    if (_ir_pin == 0) {
+      if ((boardType) == 'CircuitPlayground') {
+        _ir_pin = 11
+      } ((boardType) == 'Citilab ED1') {
+        _ir_pin = 35
+      } ((boardType) == 'D1-Mini') {
+        _ir_pin = 2
+      } ((boardType) == 'MakerPort') {
+        _ir_pin = 18
+      } ((boardType) == 'MakerPort V3') {
+        _ir_pin = 22
+      }
+    }
+  }
+  comment 'Capture the next IR message.'
+  interruptIRCapture
+}
+
+to '_dumpIR' {
+  comment 'Print raw pulse timings to the terminal.
+Can be used to analyze new protocols.'
+  local 'i' 1
+  graphIt '-----'
+  repeat (size _ir_pulse_times) {
+    local 'mark usecs' (at i _ir_pulse_times)
+    local 'space usecs' (at (i + 1) _ir_pulse_times)
+    graphIt (v 'mark usecs') (v 'space usecs')
+    i += 2
+    if ((v 'space usecs') == 0) {
+      graphIt 'timing entries:' (i - 2)
+      return 0
+    }
+  }
+}
+
+to '_getIRByte' position {
+  local 'result' 0
+  local 'i' position
+  local 'bit' 1
+  repeat 8 {
+    if ((at i _ir_pulse_times) > 1000) {result = (result | bit)}
+    bit = (bit << 1)
+    i += 2
+  }
+  return result
+}
+
+to '_got32Bits' {
+  return (and ((at 67 _ir_pulse_times) != 0) ((at 68 _ir_pulse_times) == 0))
+}
+
+to '_receiveIRFromDevice' deviceID {
+  forever {
+    '_captureIRMessage'
+    if ('_got32Bits') {
+      local 'id_lowByte' ('_getIRByte' 4 nil)
+      local 'id_highByte' ('_getIRByte' 20 nil)
+      if (and (id_highByte == (deviceID >> 8)) (id_lowByte == (deviceID & 255))) {
+        return ('_getIRByte' 36 nil)
+      }
+    }
+  }
+}
+
+to '_testIR' {
+  forever {
+    '_captureIRMessage'
+    if ('_got32Bits') {
+      comment 'Four byte message format:
+<device low byte><device high byte><command><command, bit-inverted>'
+      local 'b1' ('_getIRByte' 4 nil)
+      local 'b2' ('_getIRByte' 20 nil)
+      local 'b3' ('_getIRByte' 36 nil)
+      local 'b4' ('_getIRByte' 52 nil)
+      sayIt 'Device:' ((b2 << 8) | b1) 'code:' b3
+    }
+  }
+}
+
+to attachIR pin {
+  _ir_pin = pin
+}
+
+to attachIRTransmitter pin {
+  _ir_transmit_pin = pin
+}
+
+to interruptIRCapture {
+  comment 'Capture IR pulses using interrupt-based pulse capture system.'
+  atPut 'all' _ir_pulse_times 0
+  comment 'Wait for IR signal -- this is the start of a new message.
+Note: THe pin goes low when an IR signal is detected.'
+  waitUntil (not (digitalReadOp _ir_pin))
+  local 'start' (millisOp)
+  '[sensors:captureStart]' _ir_pin
+  comment 'Collect IR pulses until we receive over 67 pulses or until the timeout.'
+  repeatUntil (or (('[sensors:captureCount]') > 67) ((millisSince start) > 200)) {
+    waitMillis 5
+  }
+  local 'pulseData' ('[sensors:captureEnd]')
+  comment 'If we got at least 67 pulses, copy their absolute values (durations) into _ir_pulse_times.'
+  if ((size pulseData) >= 67) {
+    for i 67 {
+      atPut i _ir_pulse_times (absoluteValue (at i pulseData))
+    }
+  }
+}
+
+to ir_code_received {
+  return ((receiveIR) >= 0)
+}
+
+to ir_last_code {
+  return _ir_last_code
+}
+
+to receiveIR {
+  forever {
+    '_captureIRMessage'
+    if ('_got32Bits') {
+      local 'id_lowByte' ('_getIRByte' 4 nil)
+      local 'id_highByte' ('_getIRByte' 20 nil)
+      _ir_last_device = ((id_highByte << 8) | id_lowByte)
+      _ir_last_code = ('_getIRByte' 36 nil)
+      atPut 'all' _ir_pulse_times 0
+      return _ir_last_code
+    }
+  }
+}
+
+to timerIRCapture {
+  comment 'Capture IR pulses using the microseconds timer. (Original version, not currently used.)'
+  atPut 'all' _ir_pulse_times 0
+  local 'i' 1
+  comment 'Wait for IR signal -- this is the start of a new message.
+Note: THe pin goes low when an IR signal is detected.'
+  waitUntil (not (digitalReadOp _ir_pin))
+  local 'start' (microsOp)
+  forever {
+    comment 'Record the time until the end of the current IR pulse ("mark")'
+    waitUntil (digitalReadOp _ir_pin)
+    local 'end' (microsOp)
+    atPut i _ir_pulse_times (end - start)
+    i += 1
+    start = end
+    comment 'Record time until the start of the next IR pulse ("space")'
+    repeatUntil (not (digitalReadOp _ir_pin)) {
+      if (((microsOp) - start) > 5000) {
+        comment 'No IR pulse for 5000 usecs means "end of message"'
+        return 0
+      }
+    }
+    local 'end' (microsOp)
+    atPut i _ir_pulse_times (end - start)
+    i += 1
+    start = end
+  }
+}
+
+
+module 'LED Display' Output
+author MicroBlocks
+version 1 9 
+choices led_imageMenu heart 'small heart' yes no happy sad confused angry asleep surprised silly fabulous meh 't-shirt' 'roller skate' duck house tortoise butterfly 'stick figure' ghost sword giraffe skull umbrella snake rabbit cow 'quarter note' 'eight note' pitchfork target triangle 'left triangle' 'chess board' diamond 'small diamond' square 'small square' scissors 
+description 'Display primitives for the 5x5 LED display on the BBC micro:bit, Calliope mini and M5Atom Matrix. Boards with TFT displays (such as the Citilab ED1 or the M5Stack family) support these primitives with a simulated "fat pixel" display.'
+variables _stop_scrolling_text 
+
+  spec ' ' '[display:mbDisplay]' 'display _' 'microbitDisplay' 15237440
+  spec ' ' 'led_displayImage' 'display image _ : x _ y _' 'menu.led_imageMenu num num' 'happy' 1 1
+  spec ' ' '[display:mbDisplayOff]' 'clear display'
+  space
+  spec ' ' '[display:mbPlot]' 'plot x _ y _' 'num num' 3 3
+  spec ' ' '[display:mbUnplot]' 'unplot x _ y _' 'num num' 3 3
+  space
+  spec ' ' 'displayCharacter' 'display character _' 'str' 'A'
+  spec ' ' 'scroll_text' 'scroll text _ : pausing _ ms' 'str num' 'HELLO ROSA!' 100
+  spec ' ' 'stopScrollingText' 'stop scrolling'
+  space
+  spec 'r' '_led_image' 'led image _' 'microbitDisplay' 15237440
+  spec 'r' '_led_namedImage' '_led_namedImage _' 'menu.led_imageMenu' 'happy'
+  spec 'r' '_led_imageData' '_led_imageData'
+  spec ' ' 'set display color' 'set display color _' 'color'
+
+to '_led_image' twentyFiveBitInt {
+  comment 'An LED image is a 25-bit integer'
+  return twentyFiveBitInt
+}
+
+to '_led_imageData' {
+  return 'heart:4685802,small heart:145728,yes:2269696,no:18157905,happy:15237440,sad:18284864,confused:22348096,angry:23036241,asleep:459616,surprised:4526090,silly:25984017,fabulous:15008639,meh:2236443,t-shirt:15154043,roller skate:11534104,duck:489702,house:10976708,tortoise:359872,butterfly:29332475,stick figure:18158564,ghost:23068334,sword:4657284,giraffe:10946627,skull:15171246,umbrella:6460398,snake:469859,rabbit:16104613,cow:4685361,quarter note:7573636,eight note:7590276,pitchfork:4357813,target:4681156,triangle:1026176,left triangle:32805985,chess board:11184810,diamond:4539716,small diamond:141440,square:33080895,small square:469440,scissors:20287859,'
+}
+
+to '_led_namedImage' name {
+  local 'data' ('_led_imageData')
+  local 'i' ('[data:find]' name data)
+  if (i == -1) {
+    comment 'Name not found'
+    return 0
+  }
+  local 'start' (('[data:find]' ':' data i) + 1)
+  local 'end' (('[data:find]' ',' data i) - 1)
+  return ('[data:convertType]' ('[data:copyFromTo]' data start end) 'number')
+}
+
+to displayCharacter s {
+  s = ('[data:join]' '' s)
+  if ((size s) == 0) {
+    '[display:mbDisplayOff]'
+    return 0
+  }
+  '[display:mbDrawShape]' ('[display:mbShapeForLetter]' (at 1 s))
+}
+
+to led_displayImage imageName optionalX optionalY {
+  local 'image' imageName
+  if (isType image 'string') {
+    image = ('_led_namedImage' imageName)
+  }
+  '[display:mbDrawShape]' image (argOrDefault 2 1) (argOrDefault 3 1)
+}
+
+to scroll_text text optionalDelay {
+  text = ('[data:join]' '' text)
+  local 'delay' 100
+  if ((pushArgCount) > 1) {
+    delay = optionalDelay
+  }
+  _stop_scrolling_text = (booleanConstant false)
+  if ('Pico:ed' == (boardType)) {
+    for position (((size text) * 6) + 18) {
+      if _stop_scrolling_text {return 0}
+      '[display:mbDisplayOff]'
+      '[tft:text]' text (17 - position) 0 (colorSwatch 125 125 125 255) 1 true
+      waitMillis (delay / 2)
+    }
+  } else {
+    for position (((size text) * 6) + 6) {
+      if _stop_scrolling_text {return 0}
+      for i (size text) {
+        '[display:mbDrawShape]' ('[display:mbShapeForLetter]' ('[data:unicodeAt]' i text)) (((i * 6) + 2) - position) 1
+      }
+      waitMillis delay
+    }
+  }
+}
+
+to 'set display color' color {
+  callCustomCommand '[display:mbSetColor]' ('[data:makeList]' color)
+}
+
+to stopScrollingText {
+  _stop_scrolling_text = (booleanConstant true)
+  waitMillis 10
+  '[display:mbDisplayOff]'
+}
+
+
+module Maqueen Output
+author 'Turgut Guneysu'
+version 1 2 
+depends 'IR Remote' 
+choices LRBMenu left right both 
+choices DirMenu fwd bwd 
+choices PosMenu left right 
+description 'DFRobot Maqueen Car Kit Library
+Supports:
+  micro:bit v1 and v2
+  2 x N20 Motors (133rpm)
+  2 x LEDs
+  2 x Servos (use Servo Lib)
+  2 x Line Sensors
+  2 x Extension Ports
+  4 x RGB LEDs (use NEOPixel Lib)
+  HC-SR04 Distance Sensor
+  Buzzer
+  IR receiver (NEC)
+  I2C Connector
+  3.5-5V Battery Connector
+Pin assignments:
+  Buzzer = 0
+  Trigger = 1
+  Echo = 2
+  Servo1 = 1
+  Servo2 = 2
+  LED_Left = 8
+  LED_Right = 12
+  Line_Left = 13
+  Line_Right = 14
+  NeoPixels = 15
+  IR Receiver = 16
+Note: HC-SR04 and SERVOs share pins 1 and 2.
+'
+
+  spec ' ' 'Maqueen motor' 'Maqueen motor _ dir _ speed(0-255) _' 'menu.LRBMenu menu.DirMenu auto' 'both' 'fwd' 128
+  spec ' ' 'Maqueen stop motors' 'Maqueen stop motors _' 'menu.LRBMenu' 'both'
+  space
+  spec ' ' 'Maqueen LED' 'Maqueen LED _ _' 'menu.LRBMenu bool' 'left' true
+  spec ' ' 'Maqueen beep' 'Maqueen beep _ ms' 'auto' 100
+  space
+  spec 'r' 'Maqueen line sensor' 'Maqueen line sensor _' 'menu.PosMenu' 'left'
+  spec 'r' 'Maqueen sees line on left' 'Maqueen sees line on left _ right _' 'bool bool' true true
+  space
+  spec 'r' 'Maqueen distance (cm)' 'Maqueen distance (cm)'
+  spec 'r' 'Maqueen IR keycode' 'Maqueen IR keycode'
+
+to 'Maqueen IR keycode' {
+  comment 'Wait for an IR message and return the key code.'
+  attachIR 16
+  return (receiveIR)
+}
+
+to 'Maqueen LED' lrb LEDstatus {
+  comment '2 x red LEDs'
+  local '_mq_pin_LED_Left' 8
+  local '_mq_pin_LED_Right' 12
+  if (lrb == 'left') {
+    digitalWriteOp _mq_pin_LED_Left LEDstatus
+  } (lrb == 'right') {
+    digitalWriteOp _mq_pin_LED_Right LEDstatus
+  } (lrb == 'both') {
+    digitalWriteOp _mq_pin_LED_Left LEDstatus
+    digitalWriteOp _mq_pin_LED_Right LEDstatus
+  }
+}
+
+to 'Maqueen beep' duration {
+  comment 'Buzzer
+Remember to set the P0 switch.'
+  local '_mq_pin_Buzzer' 0
+  local 'end time' ((millisOp) + duration)
+  repeatUntil ((millisOp) >= (v 'end time')) {
+    digitalWriteOp _mq_pin_Buzzer true
+    waitMicros 1900
+    digitalWriteOp _mq_pin_Buzzer false
+    waitMicros 1900
+  }
+}
+
+to 'Maqueen distance (cm)' {
+  comment 'HC-SR04 Distance Sensor
+Contributed by Joan Guillén and Josep Ferràndiz'
+  local '_mq_pin_Trigger' 1
+  local '_mq_pin_Echo' 2
+  digitalWriteOp _mq_pin_Trigger false
+  waitMicros 2
+  digitalWriteOp _mq_pin_Trigger true
+  waitMicros 50
+  digitalWriteOp _mq_pin_Trigger false
+  local 'start' (microsOp)
+  waitUntil (or (not (digitalReadOp _mq_pin_Echo)) (((microsOp) - start) > 23320))
+  waitUntil (or (digitalReadOp _mq_pin_Echo) (((microsOp) - start) > 23320))
+  local 'init' (microsOp)
+  waitUntil (or (not (digitalReadOp _mq_pin_Echo)) (((microsOp) - init) > 23320))
+  local 'end' (microsOp)
+  waitMillis 10
+  return ((10 * (end - init)) / 583)
+}
+
+to 'Maqueen line sensor' lr {
+  comment '2 x Line Sensors (true/false)
+When Maqueen’s line-tracking sensor is put on the black line,
+the sensor outputs 0, and the blue LED turns off;
+if put on white area, it outputs 1 and the blue LED turns on.'
+  local '_mq_pin_Line_Left' 13
+  local '_mq_pin_Line_Right' 14
+  if (lr == 'left') {
+    return (digitalReadOp _mq_pin_Line_Left)
+  } (lr == 'right') {
+    return (digitalReadOp _mq_pin_Line_Right)
+  }
+}
+
+to 'Maqueen motor' lrb dir speed {
+  comment 'MOTOR CONTROL:
+
+//% blockId="left motor" block="left" M1 = 0,
+//% blockId="right motor" block="right" M2 = 1,
+//% blockId="all motor" block="all" All  (issue 2 cmds, one for each motor)
+
+//% blockId="CW" block="Forward" CW = 0x0,
+//% blockId="CCW" block="Backward" CCW = 0x1
+
+//% blockId=motor_MotorRun block="motor|%index|move|%Dir|at speed|%speed"
+//% speed.min=0 speed.max=255'
+  local '_mq_i2c_addr' (hexToInt '10')
+  speed = (minimum 255 speed)
+  if (dir == 'fwd') {
+    dir = 0
+  } (dir == 'bwd') {
+    dir = 1
+  }
+  if (lrb == 'left') {
+    lrb = 0
+    '[sensors:i2cWrite]' _mq_i2c_addr ('[data:makeList]' lrb dir speed)
+  } (lrb == 'right') {
+    lrb = 2
+    '[sensors:i2cWrite]' _mq_i2c_addr ('[data:makeList]' lrb dir speed)
+  } (lrb == 'both') {
+    '[sensors:i2cWrite]' _mq_i2c_addr ('[data:makeList]' 0 dir speed)
+    waitMillis 1
+    '[sensors:i2cWrite]' _mq_i2c_addr ('[data:makeList]' 2 dir speed)
+  }
+  waitMillis 50
+}
+
+to 'Maqueen sees line on left' leftSide rightSide {
+  comment 'Allows for dual evaluation of the sensors for faster results '
+  return (and (leftSide == (not ('Maqueen line sensor' 'left'))) (rightSide == (not ('Maqueen line sensor' 'right'))))
+}
+
+to 'Maqueen stop motors' lrb {
+  comment 'STOP Motors'
+  'Maqueen motor' lrb 'fwd' 0
+}
+
+
+module MueveMaqueen
+author Pedro
+version 1 0 
+depends Maqueen 
+choices maqueenmovimiento adelante 'atrás' parar izquierda derecha 
+choices maqueenvelocidad '0' '1' '2' '3' '4' '5' '6' '7' '8' '9' '10' 
+description ''
+
+  spec ' ' 'acción' 'acción _ _' 'menu.maqueenmovimiento menu.maqueenvelocidad' 'adelante' 0
+
+to 'acción' movimiento velocidad {
+  if (movimiento == 'adelante') {
+    'Maqueen motor' 'both' 'fwd' ('[misc:rescale]' velocidad 0 10 0 255)
+  } (movimiento == 'atrás') {
+    'Maqueen motor' 'both' 'bwd' ('[misc:rescale]' velocidad 0 10 0 255)
+  } (movimiento == 'izquierda') {
+    'Maqueen motor' 'right' 'fwd' ('[misc:rescale]' velocidad 0 10 0 255)
+    'Maqueen motor' 'left' 'bwd' ('[misc:rescale]' velocidad 0 10 0 255)
+  } (movimiento == 'derecha') {
+    'Maqueen motor' 'left' 'fwd' ('[misc:rescale]' velocidad 0 10 0 255)
+    'Maqueen motor' 'right' 'bwd' ('[misc:rescale]' velocidad 0 10 0 255)
+  } (movimiento == 'parar') {
+    'Maqueen stop motors' 'both'
+  }
+}
+
+
+module NeoPixel Output
+author MicroBlocks
+version 1 11 
+description 'Control NeoPixel (WS2812) RGB LED strips and rings.
+'
+variables _np_pixels 
+
+  spec ' ' 'neoPixelAttach' 'attach _ LED NeoPixel strip to pin _ : has white _' 'num auto bool' 10 '' false
+  spec ' ' 'setNeoPixelColors10' 'set NeoPixels _ _ _ _ _ _ _ _ _ _' 'color color color color color color color color color color'
+  spec ' ' 'clearNeoPixels' 'clear NeoPixels'
+  spec ' ' 'neoPixelSetAllToColor' 'set all NeoPixels color _' 'color'
+  spec ' ' 'setNeoPixelColor' 'set NeoPixel _ color _' 'num color' 1
+  space
+  spec 'r' 'neoPixel_colorSwatch' '_' 'color'
+  spec 'r' 'colorFromRGB' 'color r _ g _ b _ (0-255)' 'num num num' 0 100 100
+  spec 'r' 'randomColor' 'random color'
+  space
+  spec ' ' 'rotateNeoPixelsBy' 'rotate NeoPixels by _' 'auto' 1
+  space
+  spec ' ' 'NeoPixel_brighten' 'brighten NeoPixel _ by _' 'num num' 1 10
+  spec ' ' 'NeoPixel_brighten_all' 'brighten all NeoPixels by _' 'num' 10
+  spec ' ' 'NeoPixel_shift_color' 'shift NeoPixel _ color by _' 'num num' 1 10
+  spec ' ' 'NeoPixel_shift_all_colors' 'shift all NeoPixel colors by _' 'num' 10
+  space
+  spec ' ' '_NeoPixel_ensureInitialized' '_NeoPixel_ensureInitialized'
+  spec ' ' '_NeoPixel_increaseRGB' '_NeoPixel_increaseRGB of _ by _' 'num num' 1 10
+  spec ' ' '_NeoPixel_rotate' '_NeoPixel_rotate_left _' 'bool' true
+  spec ' ' '_NeoPixel_update' '_NeoPixel_update'
+  spec ' ' '_NeoPixel_shift_hue' '_NeoPixel_shift_hue of _ by _' 'auto auto' '10' '10'
+
+to NeoPixel_brighten i delta {
+  '_NeoPixel_increaseRGB' i delta
+  '_NeoPixel_update'
+}
+
+to NeoPixel_brighten_all delta {
+  for i (size _np_pixels) {
+    '_NeoPixel_increaseRGB' i delta
+  }
+  '_NeoPixel_update'
+}
+
+to NeoPixel_shift_all_colors delta {
+  for i (size _np_pixels) {
+    '_NeoPixel_shift_hue' i delta
+  }
+  '_NeoPixel_update'
+}
+
+to NeoPixel_shift_color i delta {
+  '_NeoPixel_shift_hue' i delta
+  '_NeoPixel_update'
+}
+
+to '_NeoPixel_ensureInitialized' {
+  if (_np_pixels == 0) {if (or ((boardType) == 'M5Atom-Matrix') (or ((boardType) == 'Mbits') ((boardType) == 'micro:STEAMakers'))) {
+    neoPixelAttach 25 '' false
+  } ((boardType) == 'D1-Mini') {
+    comment 'D1 mini kit'
+    neoPixelAttach 7 15 false
+  } else {
+    neoPixelAttach 10 '' false
+  }}
+}
+
+to '_NeoPixel_increaseRGB' i delta {
+  if (or (i < 1) (i > (size _np_pixels))) {return}
+  local 'rgb' (at i _np_pixels)
+  if (rgb != 0) {
+    local 'h' ('[misc:hue]' rgb)
+    local 's' ('[misc:saturation]' rgb)
+    local 'v' (('[misc:brightness]' rgb) + delta)
+    v = (maximum 20 (minimum v 100))
+    atPut i _np_pixels ('[misc:hsvColor]' h s v)
+  }
+}
+
+to '_NeoPixel_rotate' left {
+  '_NeoPixel_ensureInitialized'
+  local 'length' (size _np_pixels)
+  if left {
+    local 'first' (at 1 _np_pixels)
+    for i (length - 1) {
+      atPut i _np_pixels (at (i + 1) _np_pixels)
+    }
+    atPut length _np_pixels first
+  } else {
+    local 'last' (at length _np_pixels)
+    for i (length - 1) {
+      atPut ((length - i) + 1) _np_pixels (at (length - i) _np_pixels)
+    }
+    atPut 1 _np_pixels last
+  }
+}
+
+to '_NeoPixel_shift_hue' i delta {
+  if (or (i < 1) (i > (size _np_pixels))) {return}
+  local 'rgb' (at i _np_pixels)
+  if (rgb != 0) {
+    local 'h' ((('[misc:hue]' rgb) + delta) % 360)
+    local 's' ('[misc:saturation]' rgb)
+    local 'v' ('[misc:brightness]' rgb)
+    atPut i _np_pixels ('[misc:hsvColor]' h s v)
+  }
+}
+
+to '_NeoPixel_update' {
+  '[display:neoPixelSend]' _np_pixels
+  waitMicros 300
+}
+
+to clearNeoPixels {
+  '_NeoPixel_ensureInitialized'
+  atPut 'all' _np_pixels 0
+  '_NeoPixel_update'
+}
+
+to colorFromRGB r g b {
+  r = (maximum 0 (minimum r 255))
+  g = (maximum 0 (minimum g 255))
+  b = (maximum 0 (minimum b 255))
+  return (((r << 16) | (g << 8)) | b)
+}
+
+to neoPixelAttach number pinNumber optionalHasWhite {
+  hasWhite = false
+  if ((pushArgCount) > 2) {
+    hasWhite = optionalHasWhite
+  }
+  if (or (_np_pixels == 0) (number != (size _np_pixels))) {
+    _np_pixels = (newList number)
+  }
+  atPut 'all' _np_pixels 0
+  '[display:neoPixelSetPin]' pinNumber hasWhite
+}
+
+to neoPixelSetAllToColor color {
+  '_NeoPixel_ensureInitialized'
+  atPut 'all' _np_pixels color
+  '_NeoPixel_update'
+}
+
+to neoPixel_colorSwatch color {
+  return color
+}
+
+to randomColor {
+  local 'n1' (random 100 200)
+  local 'n2' (random 0 100)
+  if (1 == (random 1 3)) {
+    return ((n1 << 16) | (n2 << 8))
+  } (1 == (random 1 2)) {
+    return ((n2 << 16) | n1)
+  } else {
+    return ((n1 << 8) | n2)
+  }
+}
+
+to rotateNeoPixelsBy n {
+  '_NeoPixel_ensureInitialized'
+  repeat (absoluteValue n) {
+    '_NeoPixel_rotate' (n > 0)
+  }
+  '_NeoPixel_update'
+}
+
+to setNeoPixelColor i color {
+  '_NeoPixel_ensureInitialized'
+  if (and (1 <= i) (i <= (size _np_pixels))) {
+    atPut i _np_pixels color
+    '_NeoPixel_update'
+  }
+}
+
+to setNeoPixelColors10 c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 {
+  '_NeoPixel_ensureInitialized'
+  if ((size _np_pixels) >= 1) {
+    atPut 1 _np_pixels c1
+  }
+  if ((size _np_pixels) >= 2) {
+    atPut 2 _np_pixels c2
+  }
+  if ((size _np_pixels) >= 3) {
+    atPut 3 _np_pixels c3
+  }
+  if ((size _np_pixels) >= 4) {
+    atPut 4 _np_pixels c4
+  }
+  if ((size _np_pixels) >= 5) {
+    atPut 5 _np_pixels c5
+  }
+  if ((size _np_pixels) >= 6) {
+    atPut 6 _np_pixels c6
+  }
+  if ((size _np_pixels) >= 7) {
+    atPut 7 _np_pixels c7
+  }
+  if ((size _np_pixels) >= 8) {
+    atPut 8 _np_pixels c8
+  }
+  if ((size _np_pixels) >= 9) {
+    atPut 9 _np_pixels c9
+  }
+  if ((size _np_pixels) >= 10) {
+    atPut 10 _np_pixels c10
+  }
+  '_NeoPixel_update'
+}
+
+
+module Tone Output
+author MicroBlocks
+version 1 9 
+tags tone sound music audio note speaker 
+choices tone_NoteName 'nt;c' 'nt;c#' 'nt;d' 'nt;d#' 'nt;e' 'nt;f' 'nt;f#' 'nt;g' 'nt;g#' 'nt;a' 'nt;a#' 'nt;b' 
+description 'Audio tone generation. Make music with MicroBlocks!
+'
+variables _tonePin _toneInitalized _toneLoopOverhead _toneNoteNames _toneArezzoNotes _toneFrequencies 
+
+  spec ' ' 'play tone' 'play note _ octave _ for _ ms' 'str.tone_NoteName num num' 'nt;c' 0 500
+  spec ' ' 'playMIDIKey' 'play midi key _ for _ ms' 'num num' 60 500
+  spec ' ' 'play frequency' 'play frequency _ for _ ms' 'num num' 261 500
+  space
+  spec ' ' 'startTone' 'start tone _ Hz' 'num' 440
+  spec ' ' 'stopTone' 'stop tone'
+  space
+  spec ' ' 'attach buzzer to pin' 'attach buzzer to pin _' 'auto' ''
+  space
+  spec 'r' '_measureLoopOverhead' '_measureLoopOverhead'
+  spec 'r' '_baseFreqForNote' '_baseFreqForNote _' 'auto' 'c'
+  spec 'r' '_baseFreqForSemitone' '_baseFreqForSemitone _' 'num' 0
+  spec ' ' '_toneLoop' '_toneLoop _ for _ ms' 'num num' 440000 100
+  spec 'r' '_trimmedLowercase' '_trimmedLowercase _' 'str' 'A. b C...'
+  spec ' ' '_tone init note names' '_tone init note names'
+
+to '_baseFreqForNote' note {
+  comment 'Return the frequency for the given note in the middle-C octave
+scaled by 1000. For example, return 440000 (440Hz) for A.
+Note names may be upper or lower case. Note names
+may be followed by # for a sharp or b for a flat.'
+  local 'normalized note' ('_trimmedLowercase' note)
+  'normalized note' = (ifExpression ((at 1 (v 'normalized note')) == 'n') (v 'normalized note') ('[data:join]' 'nt;' (v 'normalized note')))
+  '_tone init note names'
+  if (('[data:find]' (v 'normalized note') _toneArezzoNotes) > 0) {
+    return ('_baseFreqForSemitone' ('[data:find]' (v 'normalized note') _toneArezzoNotes))
+  } else {
+    return ('_baseFreqForSemitone' ('[data:find]' (v 'normalized note') _toneNoteNames))
+  }
+}
+
+to '_baseFreqForSemitone' semitone {
+  if (_toneFrequencies == 0) {_toneFrequencies = ('[data:makeList]' 261626 277183 293665 311127 329628 349228 369994 391995 415305 440000 466164 493883 246942 277183 277183 311127 311127 349228 329628 369994 369994 415305 415305 466164 466164 523252)}
+  if (and (1 <= semitone) (semitone <= (size _toneFrequencies))) {
+    return (at semitone _toneFrequencies)
+  } else {
+    comment 'Bad note name; return 10 Hz'
+    return 10000
+  }
+}
+
+to '_measureLoopOverhead' {
+  comment 'Measure the loop overhead on this device'
+  local 'halfCycle' 100
+  local 'startT' (microsOp)
+  repeat 100 {
+    digitalWriteOp _tonePin false
+    waitMicros halfCycle
+    digitalWriteOp _tonePin false
+    waitMicros halfCycle
+  }
+  local 'usecs' ((microsOp) - startT)
+  return ((usecs - 20000) / 200)
+}
+
+to '_tone init note names' {
+  if (_toneNoteNames == 0) {
+    _toneNoteNames = ('[data:makeList]' 'nt;c' 'nt;c#' 'nt;d' 'nt;d#' 'nt;e' 'nt;f' 'nt;f#' 'nt;g' 'nt;g#' 'nt;a' 'nt;a#' 'nt;b' 'nt;c_' 'nt;db' 'nt;d_' 'nt;eb' 'nt;e_' 'nt;e#' 'nt;f_' 'nt;gb' 'nt;g_' 'nt;ab' 'nt;a_' 'nt;bb' 'nt;b_' 'nt;b#')
+    _toneArezzoNotes = ('[data:makeList]' 'nt;do' 'nt;do#' 'nt;re' 'nt;re#' 'nt;mi' 'nt;fa' 'nt;fa#' 'nt;sol' 'nt;sol#' 'nt;la' 'nt;la#' 'nt;si' 'nt;do_' 'nt;dob' 'nt;re_' 'nt;reb' 'nt;mi_' 'nt;mi#' 'nt;fa_' 'nt;solb' 'nt;sol_' 'nt;lab' 'nt;la_' 'nt;sib' 'nt;si_' 'nt;si#')
+  }
+}
+
+to '_toneLoop' scaledFreq ms {
+  if (_toneInitalized == 0) {'attach buzzer to pin' ''}
+  if ('[io:hasTone]') {
+    '[io:playTone]' _tonePin (scaledFreq / 1000)
+    waitMillis ms
+    '[io:playTone]' _tonePin 0
+  } else {
+    local 'halfCycle' ((500000000 / scaledFreq) - _toneLoopOverhead)
+    local 'cycles' ((ms * 500) / halfCycle)
+    repeat cycles {
+      digitalWriteOp _tonePin true
+      waitMicros halfCycle
+      digitalWriteOp _tonePin false
+      waitMicros halfCycle
+    }
+  }
+}
+
+to '_trimmedLowercase' s {
+  comment 'Return a copy of the given string without whitespace
+or periods and all lowercase.'
+  local 'result' (newList (size s))
+  '[data:delete]' 'all' result
+  for i (size s) {
+    local 'ch' ('[data:unicodeAt]' i s)
+    if (and (ch > 32) (ch != 46)) {
+      if (and (65 <= ch) (ch <= 90)) {ch = (ch + 32)}
+      '[data:addLast]' ch result
+    }
+  }
+  return ('[data:unicodeString]' result)
+}
+
+to 'attach buzzer to pin' pinNumber {
+  if (pinNumber == '') {
+    comment 'Pin number not specified; use default pin for this device'
+    if ((boardType) == 'Citilab ED1') {
+      _tonePin = 26
+    } ((boardType) == 'M5Stack-Core') {
+      _tonePin = 25
+    } ((boardType) == 'M5StickC') {
+      _tonePin = 26
+    } ((boardType) == 'Calliope') {
+      digitalWriteOp 23 true
+      digitalWriteOp 24 true
+      _tonePin = 25
+    } ((boardType) == 'D1-Mini') {
+      _tonePin = 12
+    } else {
+      _tonePin = -1
+    }
+  } else {
+    _tonePin = pinNumber
+  }
+  _toneLoopOverhead = ('_measureLoopOverhead')
+  _toneInitalized = (booleanConstant true)
+}
+
+to 'play frequency' freq ms {
+  '_toneLoop' (freq * 1000) ms
+}
+
+to 'play tone' note octave ms {
+  local 'freq' ('_baseFreqForNote' note)
+  if (freq <= 10000) {
+    waitMillis ms
+    return 0
+  }
+  if (octave < 0) {
+    repeat (absoluteValue octave) {
+      freq = (freq / 2)
+    }
+  }
+  repeat octave {
+    freq = (freq * 2)
+  }
+  '_toneLoop' freq ms
+}
+
+to playMIDIKey key ms {
+  local 'freq' ('_baseFreqForSemitone' ((key % 12) + 1))
+  local 'octave' ((key / 12) - 5)
+  if (octave < 0) {
+    repeat (absoluteValue octave) {
+      freq = (freq / 2)
+    }
+  }
+  repeat octave {
+    freq = (freq * 2)
+  }
+  '_toneLoop' freq ms
+}
+
+to startTone freq {
+  if (_toneInitalized == 0) {'attach buzzer to pin' ''}
+  if ('[io:hasTone]') {'[io:playTone]' _tonePin freq}
+}
+
+to stopTone {
+  startTone 0
+}
+
+
+module microSTEAMakers
+author 'Joan Guillén'
+version 1 6 
+depends Tone Color 
+tags keyestudio steam 
+choices ms_energyMeter 'ms;start' 'ms;stop' 'ms;reset' 
+choices ms_inclination 'ms;down' x y 
+choices ms_accel x y z 
+choices ms_energy mA mV mW 
+choices ms_led_imageMenu heart 'small heart' yes no happy sad confused angry asleep surprised silly fabulous meh 't-shirt' 'roller skate' duck house tortoise butterfly 'stick figure' ghost sword giraffe skull umbrella snake rabbit cow 'quarter note' 'eight note' pitchfork target triangle 'left triangle' 'chess board' diamond 'small diamond' square 'small square' scissors 
+description 'Provides custom blocks for the micro:STEAMakers, an ESP32 board with WiFi, BLE, 5x5 RGB LED matrix, 2 buttons, touch, light, sound, temperature and humidity sensors, six-axis accelerometer/gyroscope, energy control, and GPIO and I2C pins for additional extensions.
+'
+variables _ms_neoPixels _ms_neoPixels_scale _ms_scrolling_stopped _ms_energyReading _ms_energySum _ms_aht20_on _ms_aht20_reading _ms_aht20_data _ms_MPU6050_on _ms_MPU6050_add 
+
+  spec ' ' 'ms_display' 'ms display #BR# _ _ _ _ _ #BR# _ _ _ _ _ #BR# _ _ _ _ _ #BR# _ _ _ _ _ #BR# _ _ _ _ _' 'color color color color color color color color color color color color color color color color color color color color color color color color color'
+  spec ' ' 'ms_clear_display' 'ms clear display'
+  spec ' ' 'ms_setGlobalBrightnessScale' 'ms scale brightness to _ %' 'num' 100
+  spec ' ' 'ms_plot' 'ms plot x _ y _ with _' 'num num color' 3 3
+  spec ' ' 'ms_unplot' 'ms unplot x _ y _' 'num num' 3 3
+  space
+  spec 'r' 'ms_touching' 'ms touching ?'
+  spec 'r' 'ms_light' 'ms light'
+  spec 'r' 'ms_sound' 'ms sound'
+  spec 'r' 'ms_temperature' 'ms temperature ºC'
+  spec 'r' 'ms_humidity' 'ms humidity %'
+  space
+  spec 'r' 'ms_accel' 'ms accel _ m/s2' 'menu.ms_accel' 'x'
+  spec 'r' 'ms_gyro' 'ms gyro _ deg/s' 'menu.ms_accel' 'x'
+  spec 'r' 'ms_inclination' 'ms inclination towards _ º' 'menu.ms_inclination' 'ms;down'
+  space
+  spec 'r' 'ms_energy' 'ms energy _' 'menu.ms_energy' 'mW'
+  spec ' ' 'ms_energyMeter' 'ms _ energy meter' 'menu.ms_energyMeter' 'ms;start'
+  spec 'r' 'ms_energyConsumption' 'ms energy consumption (µWh)'
+  space
+  spec ' ' '_ms_neoPixels_setup' '_ms_neoPixels_setup'
+  spec ' ' '_ms_neoPixels_update' '_ms_neoPixels_update'
+  spec 'r' '_ms_imageNames' '_ms_imageNames'
+  spec ' ' '_ms_aht20_setup' '_ms_aht20_setup'
+  spec ' ' '_ms_aht20_getData' '_ms_aht20_getData'
+  spec ' ' '_ms_MPU6050_setup' '_ms_MPU6050_setup'
+  spec ' ' '_ms_energy_read_loop' '_ms_energy_read_loop'
+
+to '_ms_MPU6050_setup' {
+  _ms_MPU6050_add = (hexToInt '68')
+  comment 'setclockSource  0x01'
+  local 'value' (i2cGet _ms_MPU6050_add (hexToInt '6b'))
+  value = (value & (hexToInt 'F8'))
+  value = (value | (hexToInt '01'))
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '6B') value)
+  comment 'setScale amb MPU6050_SCALE_2000DPS -> 0x03'
+  comment 'dpsPerDigit = .060975f'
+  local 'value' (i2cGet _ms_MPU6050_add (hexToInt '1B'))
+  value = (value & (hexToInt 'E7'))
+  value = (value | (3 << 3))
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '1B') value)
+  comment 'setRange amb MPU6050_RANGE_2G -> 0x00'
+  comment 'rangePerDigit = .000061f'
+  local 'value' (i2cGet _ms_MPU6050_add (hexToInt '1C'))
+  value = (value & (hexToInt 'E7'))
+  value = (value | (0 << 3))
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '1C') value)
+  comment 'setSleepEnabled -> false'
+  comment 'registerBit (0x6B,6)'
+  local 'value' (i2cGet _ms_MPU6050_add (hexToInt '6B'))
+  value = (value & ('~' (1 << 6)))
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '6B') value)
+}
+
+to '_ms_aht20_getData' {
+  if (not _ms_aht20_on) {'_ms_aht20_setup'}
+  _ms_aht20_reading = (booleanConstant true)
+  local 'aht20_read' (newList 6)
+  '[sensors:i2cWrite]' (hexToInt '38') ('[data:makeList]' (hexToInt 'AC') (hexToInt '33') (hexToInt '00'))
+  waitMillis 75
+  '[sensors:i2cRead]' (hexToInt '38') aht20_read
+  _ms_aht20_data = aht20_read
+  _ms_aht20_reading = (booleanConstant false)
+}
+
+to '_ms_aht20_setup' {
+  '[sensors:i2cWrite]' (hexToInt '38') ('[data:makeList]' (hexToInt 'BE') (hexToInt '08') (hexToInt '00'))
+  '[sensors:i2cWrite]' (hexToInt '38') ('[data:makeList]' (hexToInt 'AC') (hexToInt '33') (hexToInt '00'))
+  _ms_aht20_on = (booleanConstant true)
+  waitMillis 75
+}
+
+to '_ms_energy_read_loop' {
+  repeatUntil (not _ms_energyReading) {
+    _ms_energySum = (_ms_energySum + (ms_energy 'mA'))
+    waitMillis 1000
+  }
+}
+
+to '_ms_imageNames' {
+  return '{"heart":4685802, "small heart":145728, "yes":2269696, "no":18157905, "happy":15237440, "sad":18284864, "confused":22348096, "angry":23036241, "asleep":459616, "surprised":4526090, "silly":25984017, "fabulous":15008639, "meh":2236443, "t-shirt":15154043, "roller skate":11534104, "duck":489702, "house":10976708, "tortoise":359872, "butterfly":29332475, "stick figure":18158564, "ghost":23068334, "sword":4657284, "giraffe":10946627, "skull":15171246, "umbrella":6460398, "snake":469859, "rabbit":16104613, "cow":4685361, "quarter note":7573636, "eight note":7590276, "pitchfork":4357813, "target":4681156, "triangle":1026176, "left triangle":32805985, "chess board":11184810, "diamond":4539716, "small diamond":141440, "square":33080895, "small square":469440, "scissors":20287859}'
+}
+
+to '_ms_neoPixels_setup' {
+  '[display:mbDisplayOff]'
+  waitMicros 300
+  if (_ms_neoPixels == 0) {
+    _ms_neoPixels = (newList 25 0)
+  }
+  _ms_neoPixels_scale = 100
+}
+
+to '_ms_neoPixels_update' {
+  comment 'Alway set the NeoPixel pin; may have been changed by another library.'
+  '[display:neoPixelSetPin]' 3 false
+  if (100 == _ms_neoPixels_scale) {
+    '[display:neoPixelSend]' _ms_neoPixels
+  } else {
+    local 'currentPixels' (newList 25)
+    local 'adjustedScale' ('[misc:rescale]' _ms_neoPixels_scale 0 100 31 100)
+    adjustedScale = (maximum 0 (minimum adjustedScale 100))
+    for pix 25 {
+      atPut pix currentPixels ('[misc:hsvColor]' ('[misc:hue]' (at pix _ms_neoPixels)) ('[misc:saturation]' (at pix _ms_neoPixels)) ((('[misc:brightness]' (at pix _ms_neoPixels)) * adjustedScale) / 100))
+    }
+    '[display:neoPixelSend]' currentPixels
+  }
+  waitMicros 300
+}
+
+to ms_accel axis {
+  if (not _ms_MPU6050_on) {'_ms_MPU6050_setup'}
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '3B'))
+  local 'reading' (newList 6)
+  '[sensors:i2cRead]' _ms_MPU6050_add reading
+  local 'msB' 3
+  local 'lsB' 4
+  local 'direction' -1
+  if (axis == 'y') {
+    msB = 1
+    lsB = 2
+    direction = 1
+  }
+  if (axis == 'z') {
+    msB = 5
+    lsB = 6
+    direction = 1
+  }
+  local 'result' (at msB reading)
+  if ((result >> 7) == 1) {
+    result = (-1 * (('~' result) & 127))
+  }
+  return (direction * (((result << 8) | (at lsB reading)) / 1672))
+}
+
+to ms_clear_display {
+  '_ms_neoPixels_setup'
+  atPut 'all' _ms_neoPixels 0
+  '_ms_neoPixels_update'
+  '[display:mbDisplayOff]'
+}
+
+to ms_display c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 c16 c17 c18 c19 c20 c21 c22 c23 c24 c25 {
+  '_ms_neoPixels_setup'
+  for i 25 {
+    atPut i _ms_neoPixels (argOrDefault i 0)
+  }
+  '_ms_neoPixels_update'
+}
+
+to ms_energy op {
+  if (op == 'mV') {return 3300}
+  local 'ampCounter' 0
+  for i 500 {
+    ampCounter = (ampCounter + (analogReadOp 23))
+  }
+  ampCounter = (ampCounter * 2)
+  ampCounter = ((ampCounter * 428) + 43560611)
+  ampCounter = (ampCounter / 1000000)
+  if (op == 'mA') {
+    return ampCounter
+  } (op == 'mW') {
+    return ((ampCounter * 3300) / 1000)
+  } else {
+    return
+  }
+}
+
+to ms_energyConsumption {
+  return ((_ms_energySum * 33) / 36)
+}
+
+to ms_energyMeter op {
+  if (op == 'ms;start') {
+    _ms_energyReading = (booleanConstant true)
+    sendBroadcast '_ms_energy_read_loop'
+  } (op == 'stop') {
+    _ms_energyReading = (booleanConstant false)
+  } (op == 'reset') {
+    _ms_energySum = 0
+  }
+}
+
+to ms_gyro axis {
+  if (not _ms_MPU6050_on) {'_ms_MPU6050_setup'}
+  '[sensors:i2cWrite]' _ms_MPU6050_add ('[data:makeList]' (hexToInt '43'))
+  local 'reading' (newList 6)
+  '[sensors:i2cRead]' _ms_MPU6050_add reading
+  local 'msB' 3
+  local 'lsB' 4
+  local 'direction' 1
+  if (axis == 'y') {
+    msB = 1
+    lsB = 2
+    direction = -1
+  }
+  if (axis == 'z') {
+    msB = 5
+    lsB = 6
+    direction = -1
+  }
+  local 'result' (at msB reading)
+  if ((result >> 7) == 1) {
+    result = (-1 * (('~' result) & 127))
+  }
+  return ((10 * direction) * (((result << 8) | (at lsB reading)) / 164))
+}
+
+to ms_humidity {
+  if (not _ms_aht20_reading) {'_ms_aht20_getData'}
+  local 'rawData' _ms_aht20_data
+  local 'calc' 0
+  calc = (at 2 rawData)
+  calc = (calc << 8)
+  calc = (calc + (at 3 rawData))
+  calc = (calc << 4)
+  calc = (calc + ((at 4 rawData) >> 4))
+  return ((calc * 100) / 1048576)
+}
+
+to ms_inclination op {
+  if (not _ms_MPU6050_on) {'_ms_MPU6050_setup'}
+  if (op == 'x') {return ((ms_accel 'x') * 9)}
+  if (op == 'y') {return ((ms_accel 'y') * 9)}
+  return (((ms_accel 'z') + 10) * 9)
+}
+
+to ms_light {
+  return (analogReadOp 24)
+}
+
+to ms_plot x y color {
+  '_ms_neoPixels_setup'
+  if (and (0 < x) (and (0 < y) (and (6 > x) (6 > y)))) {
+    atPut (x + ((y - 1) * 5)) _ms_neoPixels color
+    '_ms_neoPixels_update'
+  }
+}
+
+to ms_setGlobalBrightnessScale scale {
+  '_ms_neoPixels_setup'
+  _ms_neoPixels_scale = scale
+  '_ms_neoPixels_update'
+}
+
+to ms_sound {
+  return (analogReadOp 22)
+}
+
+to ms_temperature {
+  if (not _ms_aht20_reading) {'_ms_aht20_getData'}
+  local 'rawData' _ms_aht20_data
+  local 'calc' 0
+  calc = ((at 4 rawData) & (hexToInt '0f'))
+  calc = (calc << 8)
+  calc = (calc + (at 5 rawData))
+  calc = (calc << 8)
+  calc = (calc + (at 6 rawData))
+  return (((calc * 200) / 1048576) - 50)
+}
+
+to ms_touching {
+  return (('[sensors:touchRead]' 27) < 35)
+}
+
+to ms_unplot x y {
+  '_ms_neoPixels_setup'
+  if (and (0 < x) (and (0 < y) (and (6 > x) (6 > y)))) {
+    atPut (x + ((y - 1) * 5)) _ms_neoPixels 0
+    '_ms_neoPixels_update'
+  }
+}
+

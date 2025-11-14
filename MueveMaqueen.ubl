@@ -1,0 +1,27 @@
+module MueveMaqueen
+author Pedro Ruiz
+version 1 0 
+depends Maqueen
+description ''
+
+choices maqueenmovimiento 'adelante' 'atrás' 'parar' 'izquierda' 'derecha' 
+choices maqueenvelocidad '0' '1' '2' '3' '4' '5' '6' '7' '8' '9' '10'
+
+  spec ' ' 'acción' 'acción _ _' 'menu.maqueenmovimiento menu.maqueenvelocidad' 'adelante' 0
+
+to 'acción' movimiento velocidad {
+  if (movimiento == 'adelante') {
+    'Maqueen motor' 'both' 'fwd' ('[misc:rescale]' velocidad 0 10 0 255)
+  } (movimiento == 'atrás') {
+    'Maqueen motor' 'both' 'bwd' ('[misc:rescale]' velocidad 0 10 0 255)
+  } (movimiento == 'izquierda') {
+    'Maqueen motor' 'right' 'fwd' ('[misc:rescale]' velocidad 0 10 0 255)
+    'Maqueen motor' 'left' 'bwd' ('[misc:rescale]' velocidad 0 10 0 255)
+  } (movimiento == 'derecha') {
+    'Maqueen motor' 'left' 'fwd' ('[misc:rescale]' velocidad 0 10 0 255)
+    'Maqueen motor' 'right' 'bwd' ('[misc:rescale]' velocidad 0 10 0 255)
+  } (movimiento == 'parar') {
+    'Maqueen stop motors' 'both'
+  }
+}
+

@@ -1,0 +1,317 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables mensaje 
+
+script 414 66 {
+whenCondition ('[radio:messageReceived]')
+mensaje = ('[radio:receivedString]')
+if (mensaje == 'f') {
+  move 'adelante' 6
+  '[display:mbDisplay]' 4347332
+} (mensaje == 'b') {
+  move 'atrás' 6
+  '[display:mbDisplay]' 4674692
+} (mensaje == 'r') {
+  move 'derecha' 6
+  '[display:mbDisplay]' 4488452
+} (mensaje == 'l') {
+  move 'izquierda' 6
+  '[display:mbDisplay]' 4291652
+} (mensaje == 's') {
+  move 'parar' 0
+}
+}
+
+script 66 100 {
+whenStarted
+Setup 0 1
+'[radio:setPower]' 4
+'[radio:setGroup]' 5
+'[display:mbDisplayOff]'
+'[display:mbDisplay]' 18157905
+}
+
+
+module Eserover
+author 'por Pedro Ruiz'
+version 1 0 
+depends Servo 
+choices esero_velocity '0' '1' '2' '3' '4' '5' '6' '7' '8' '9' '10' 
+choices esero_action adelante 'atrás' parar izquierda derecha 
+description ''
+variables _pinRightRover _pinLeftRover 
+
+  spec ' ' 'move' 'mover _ a velocidad _' 'menu.esero_action menu.esero_velocity' 'adelante' '0'
+  spec ' ' 'Setup' 'configurar pines izqd. _ derch. _' 'auto auto' '' ''
+
+to Setup pinL pinR {
+  _pinLeftRover = pinL
+  _pinRightRover = pinR
+}
+
+to move action velocity {
+  if (action == 'adelante') {
+    local 'direction0' -1
+    local 'direction1' 1
+  } (action == 'atrás') {
+    local 'direction0' 1
+    local 'direction1' -1
+  } (action == 'derecha') {
+    local 'direction0' -1
+    local 'direction1' -1
+  } (action == 'izquierda') {
+    local 'direction0' 1
+    local 'direction1' 1
+  } (action == 'parar') {
+    local 'direction0' 0
+    local 'direction1' 0
+  }
+  setServoAngle _pinLeftRover (('[misc:rescale]' velocity 0 10 0 90) * direction0)
+  setServoAngle _pinRightRover (('[misc:rescale]' velocity 0 10 0 90) * direction1)
+}
+
+
+module 'LED Display' Output
+author MicroBlocks
+version 1 9 
+choices led_imageMenu heart 'small heart' yes no happy sad confused angry asleep surprised silly fabulous meh 't-shirt' 'roller skate' duck house tortoise butterfly 'stick figure' ghost sword giraffe skull umbrella snake rabbit cow 'quarter note' 'eight note' pitchfork target triangle 'left triangle' 'chess board' diamond 'small diamond' square 'small square' scissors 
+description 'Display primitives for the 5x5 LED display on the BBC micro:bit, Calliope mini and M5Atom Matrix. Boards with TFT displays (such as the Citilab ED1 or the M5Stack family) support these primitives with a simulated "fat pixel" display.'
+variables _stop_scrolling_text 
+
+  spec ' ' '[display:mbDisplay]' 'display _' 'microbitDisplay' 15237440
+  spec ' ' 'led_displayImage' 'display image _ : x _ y _' 'menu.led_imageMenu num num' 'happy' 1 1
+  spec ' ' '[display:mbDisplayOff]' 'clear display'
+  space
+  spec ' ' '[display:mbPlot]' 'plot x _ y _' 'num num' 3 3
+  spec ' ' '[display:mbUnplot]' 'unplot x _ y _' 'num num' 3 3
+  space
+  spec ' ' 'displayCharacter' 'display character _' 'str' 'A'
+  spec ' ' 'scroll_text' 'scroll text _ : pausing _ ms' 'str num' 'HELLO ROSA!' 100
+  spec ' ' 'stopScrollingText' 'stop scrolling'
+  space
+  spec 'r' '_led_image' 'led image _' 'microbitDisplay' 15237440
+  spec 'r' '_led_namedImage' '_led_namedImage _' 'menu.led_imageMenu' 'happy'
+  spec 'r' '_led_imageData' '_led_imageData'
+  spec ' ' 'set display color' 'set display color _' 'color'
+
+to '_led_image' twentyFiveBitInt {
+  comment 'An LED image is a 25-bit integer'
+  return twentyFiveBitInt
+}
+
+to '_led_imageData' {
+  return 'heart:4685802,small heart:145728,yes:2269696,no:18157905,happy:15237440,sad:18284864,confused:22348096,angry:23036241,asleep:459616,surprised:4526090,silly:25984017,fabulous:15008639,meh:2236443,t-shirt:15154043,roller skate:11534104,duck:489702,house:10976708,tortoise:359872,butterfly:29332475,stick figure:18158564,ghost:23068334,sword:4657284,giraffe:10946627,skull:15171246,umbrella:6460398,snake:469859,rabbit:16104613,cow:4685361,quarter note:7573636,eight note:7590276,pitchfork:4357813,target:4681156,triangle:1026176,left triangle:32805985,chess board:11184810,diamond:4539716,small diamond:141440,square:33080895,small square:469440,scissors:20287859,'
+}
+
+to '_led_namedImage' name {
+  local 'data' ('_led_imageData')
+  local 'i' ('[data:find]' name data)
+  if (i == -1) {
+    comment 'Name not found'
+    return 0
+  }
+  local 'start' (('[data:find]' ':' data i) + 1)
+  local 'end' (('[data:find]' ',' data i) - 1)
+  return ('[data:convertType]' ('[data:copyFromTo]' data start end) 'number')
+}
+
+to displayCharacter s {
+  s = ('[data:join]' '' s)
+  if ((size s) == 0) {
+    '[display:mbDisplayOff]'
+    return 0
+  }
+  '[display:mbDrawShape]' ('[display:mbShapeForLetter]' (at 1 s))
+}
+
+to led_displayImage imageName optionalX optionalY {
+  local 'image' imageName
+  if (isType image 'string') {
+    image = ('_led_namedImage' imageName)
+  }
+  '[display:mbDrawShape]' image (argOrDefault 2 1) (argOrDefault 3 1)
+}
+
+to scroll_text text optionalDelay {
+  text = ('[data:join]' '' text)
+  local 'delay' 100
+  if ((pushArgCount) > 1) {
+    delay = optionalDelay
+  }
+  _stop_scrolling_text = (booleanConstant false)
+  if ('Pico:ed' == (boardType)) {
+    for position (((size text) * 6) + 18) {
+      if _stop_scrolling_text {return 0}
+      '[display:mbDisplayOff]'
+      '[tft:text]' text (17 - position) 0 (colorSwatch 125 125 125 255) 1 true
+      waitMillis (delay / 2)
+    }
+  } else {
+    for position (((size text) * 6) + 6) {
+      if _stop_scrolling_text {return 0}
+      for i (size text) {
+        '[display:mbDrawShape]' ('[display:mbShapeForLetter]' ('[data:unicodeAt]' i text)) (((i * 6) + 2) - position) 1
+      }
+      waitMillis delay
+    }
+  }
+}
+
+to 'set display color' color {
+  callCustomCommand '[display:mbSetColor]' ('[data:makeList]' color)
+}
+
+to stopScrollingText {
+  _stop_scrolling_text = (booleanConstant true)
+  waitMillis 10
+  '[display:mbDisplayOff]'
+}
+
+
+module Radio Comm
+author MicroBlocks
+version 1 2 
+tags radio communication messaging network 
+description 'Send and receive messages between micro:bit boards via their built-in radio system.'
+
+  spec ' ' '[radio:sendInteger]' 'radio send number _' 'num' 123
+  spec ' ' '[radio:sendString]' 'radio send string _' 'str' 'Hello!'
+  spec ' ' '[radio:sendPair]' 'radio send pair _ = _' 'str num' 'light' 10
+  spec 'r' '[radio:messageReceived]' 'radio message received?'
+  spec 'r' '[radio:receivedInteger]' 'radio last number'
+  spec 'r' '[radio:receivedString]' 'radio last string'
+  spec ' ' '[radio:setGroup]' 'radio set group _ (0-255)' 'num' 0
+  spec ' ' '[radio:setPower]' 'radio set power (0-7) _' 'num' 4
+  spec 'r' '_signalStrength' '_radio last signal strength'
+  spec 'r' '_radioLastSenderID' '_radio last sender ID'
+  spec 'r' '_radioMyID' '_radio my ID'
+  spec 'r' '_receivedMessageType' '_radio last message type'
+  spec ' ' '_setChannel' '_radio set channel (0-83) _' 'num' 7
+
+to '_radioLastSenderID' {
+  return ('[radio:lastMessageID]')
+}
+
+to '_radioMyID' {
+  return ('[radio:deviceID]')
+}
+
+to '_receivedMessageType' {
+  return ('[radio:receivedMessageType]')
+}
+
+to '_setChannel' channel {
+  '[radio:setChannel]' channel
+}
+
+to '_signalStrength' {
+  return ('[radio:signalStrength]')
+}
+
+
+module Servo Output
+author MicroBlocks
+version 1 3 
+tags servo motor angle rotation position 
+description 'Control both positional (angle) and rotational servo motors.
+'
+variables _servoPin _servoPulseWidth 
+
+  spec ' ' 'setServoAngle' 'set servo _ to _ degrees (-90 to 90)' 'num num' 1 90
+  spec ' ' 'setServoSpeed' 'set servo _ to speed _ (-100 to 100)' 'num num' 1 100
+  spec ' ' 'stopServo' 'stop servo _' 'num' 1
+  spec 'r' '_servoIndex' '_servoIndex _' 'num' 1
+  spec ' ' '_servoPulse' '_servoPulse pin _ usecs _' 'num num' 1 1500
+  spec ' ' '_servoUpdateLoop' '_servoUpdateLoop'
+
+to '_servoIndex' which {
+  if (_servoPin == 0) {
+    _servoPin = ('[data:makeList]')
+    _servoPulseWidth = ('[data:makeList]')
+    sendBroadcast '_servoUpdateLoop'
+  }
+  local 'i' ('[data:find]' which _servoPin)
+  if (i < 0) {
+    comment 'Add new pin'
+    '[data:addLast]' which _servoPin
+    '[data:addLast]' '1500' _servoPulseWidth
+    i = (size _servoPin)
+  }
+  return i
+}
+
+to '_servoPulse' pin usecs {
+  if (usecs == 0) {
+    comment 'Servo stopped; do nothing'
+    return 0
+  }
+  usecs = (maximum 850 (minimum usecs 2150))
+  comment 'Split wait into a long wait followed by a wait of <= 30 usecs for greater accuracy'
+  local 'endTime' ((microsOp) + usecs)
+  digitalWriteOp pin true
+  waitMicros (usecs - 30)
+  waitMicros (endTime - (microsOp))
+  digitalWriteOp pin false
+}
+
+to '_servoUpdateLoop' {
+  forever {
+    if (_servoPin != 0) {
+      comment 'If the _servoPin list is not 0, update the servos'
+      for i (size _servoPin) {
+        local 'pin' (at i _servoPin)
+        local 'usecs' (at i _servoPulseWidth)
+        if (and (pin >= 0) (usecs != 0)) {
+          '_servoPulse' pin usecs
+        }
+      }
+      waitMillis 15
+    }
+  }
+}
+
+to setServoAngle which degrees optionalReverse {
+  local 'reversed' false
+  if ((pushArgCount) > 2) {
+    reversed = optionalReverse
+  }
+  if reversed {
+    degrees = (0 - degrees)
+  }
+  local 'pulseWidth' (1500 - (10 * degrees))
+  if ('[io:hasServo]') {
+    '[io:setServo]' which pulseWidth
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth pulseWidth
+  }
+}
+
+to setServoSpeed which speed optionalReverse {
+  local 'reversed' false
+  if ((pushArgCount) > 2) {
+    reversed = optionalReverse
+  }
+  if reversed {
+    speed = (0 - speed)
+  }
+  local 'pulseWidth' (1500 - (10 * speed))
+  if ((absoluteValue speed) < 2) {
+    pulseWidth = 0
+  }
+  if ('[io:hasServo]') {
+    '[io:setServo]' which pulseWidth
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth pulseWidth
+  }
+}
+
+to stopServo which {
+  if ('[io:hasServo]') {
+    '[io:setServo]' which 0
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth 0
+  }
+}
+
